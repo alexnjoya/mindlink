@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { BellIcon, SearchIcon, MenuIcon } from "../icons";
 import { getTimeBasedGreeting } from "../../utils/greeting";
 
@@ -8,6 +9,8 @@ interface HeaderProps {
 }
 
 export function Header({ userName, onMobileMenuToggle }: HeaderProps) {
+  const location = useLocation();
+  const isDashboard = location.pathname === "/";
   const { greeting, icon } = getTimeBasedGreeting();
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -33,13 +36,15 @@ export function Header({ userName, onMobileMenuToggle }: HeaderProps) {
     <div className="px-4 sm:px-6 py-3 sm:py-4">
       {/* Desktop Layout */}
       <div className="hidden sm:flex items-center justify-between gap-4">
-        {/* Desktop: Greeting on left */}
-        <div className="flex items-center gap-3">
-          <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
-            {greeting}, {userName}!
-          </h2>
-          {icon}
-        </div>
+        {/* Desktop: Greeting on left - only on dashboard */}
+        {isDashboard && (
+          <div className="flex items-center gap-3">
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
+              {greeting}, {userName}!
+            </h2>
+            {icon}
+          </div>
+        )}
 
         {/* Desktop: Search, Notification, and Profile */}
         <div className="flex items-center gap-4">
@@ -156,13 +161,15 @@ export function Header({ userName, onMobileMenuToggle }: HeaderProps) {
             </div>
           </div>
         </div>
-        {/* Second row: Greeting */}
-        <div className="flex items-center gap-2">
-          <h2 className="text-xl font-bold text-gray-900">
-            {greeting}, {userName}!
-          </h2>
-          {icon}
-        </div>
+        {/* Second row: Greeting - only on dashboard */}
+        {isDashboard && (
+          <div className="flex items-center gap-2">
+            <h2 className="text-xl font-bold text-gray-900">
+              {greeting}, {userName}!
+            </h2>
+            {icon}
+          </div>
+        )}
       </div>
     </div>
   );
