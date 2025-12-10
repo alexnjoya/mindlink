@@ -57,10 +57,17 @@ export function Sidebar({ isCollapsed = false, onToggle, isMobileMenuOpen = fals
             isCollapsed={false}
             onClick={onMobileMenuClose}
           />
-           <NavItem 
+          <NavItem 
             icon={<GamesIcon className="w-5 h-5" />} 
             label="Cognitive Games" 
             to="/games"
+            isCollapsed={false}
+            onClick={onMobileMenuClose}
+          />
+          <NavItem 
+            icon={<ChatIcon className="w-5 h-5" />} 
+            label="Chat" 
+            to="/chat"
             isCollapsed={false}
             onClick={onMobileMenuClose}
           />
@@ -73,7 +80,7 @@ export function Sidebar({ isCollapsed = false, onToggle, isMobileMenuOpen = fals
           />
           <NavItem 
             icon={<PsychologistsIcon className="w-5 h-5" />} 
-            label="Psychologists" 
+            label="Support Network" 
             to="/psychologists"
             isCollapsed={false}
             onClick={onMobileMenuClose}
@@ -89,14 +96,6 @@ export function Sidebar({ isCollapsed = false, onToggle, isMobileMenuOpen = fals
             icon={<JournalIcon className="w-5 h-5" />} 
             label="Journal" 
             to="/journal"
-            isCollapsed={false}
-            onClick={onMobileMenuClose}
-          />
-         
-          <NavItem 
-            icon={<ChatIcon className="w-5 h-5" />} 
-            label="Chat" 
-            to="/chat"
             isCollapsed={false}
             onClick={onMobileMenuClose}
           />
@@ -140,6 +139,18 @@ export function Sidebar({ isCollapsed = false, onToggle, isMobileMenuOpen = fals
           isCollapsed={isCollapsed}
         />
         <NavItem 
+          icon={<GamesIcon className="w-5 h-5" />} 
+          label="Cognitive Games" 
+          to="/games"
+          isCollapsed={isCollapsed}
+        />
+        <NavItem 
+          icon={<ChatIcon className="w-5 h-5" />} 
+          label="Chat" 
+          to="/chat"
+          isCollapsed={isCollapsed}
+        />
+        <NavItem 
           icon={<SessionIcon className="w-5 h-5" />} 
           label="My Session" 
           to="/sessions"
@@ -147,7 +158,7 @@ export function Sidebar({ isCollapsed = false, onToggle, isMobileMenuOpen = fals
         />
         <NavItem 
           icon={<PsychologistsIcon className="w-5 h-5" />} 
-          label="Psychologists" 
+          label="Support Network" 
           to="/psychologists"
           isCollapsed={isCollapsed}
         />
@@ -161,18 +172,6 @@ export function Sidebar({ isCollapsed = false, onToggle, isMobileMenuOpen = fals
           icon={<JournalIcon className="w-5 h-5" />} 
           label="Journal" 
           to="/journal"
-          isCollapsed={isCollapsed}
-        />
-        <NavItem 
-          icon={<GamesIcon className="w-5 h-5" />} 
-          label="Cognitive Games" 
-          to="/games"
-          isCollapsed={isCollapsed}
-        />
-        <NavItem 
-          icon={<ChatIcon className="w-5 h-5" />} 
-          label="Chat" 
-          to="/chat"
           isCollapsed={isCollapsed}
         />
       </nav>
