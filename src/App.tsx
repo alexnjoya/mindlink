@@ -1,10 +1,12 @@
 import "./App.css";
+import { DashboardLayout } from "./components/layout/DashboardLayout";
+import { Dashboard } from "./components/dashboard/Dashboard";
 
 function App() {
   return (
-    <>
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
-    </>
+    <DashboardLayout>
+      <Dashboard />
+    </DashboardLayout>
   );
 }
 
