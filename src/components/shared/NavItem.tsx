@@ -1,16 +1,21 @@
+import { Link, useLocation } from "react-router-dom";
 import type { ReactNode } from "react";
 
 interface NavItemProps {
   icon: ReactNode;
   label: string;
-  active?: boolean;
+  to: string;
   isCollapsed?: boolean;
   onClick?: () => void;
 }
 
-export function NavItem({ icon, label, active = false, isCollapsed = false, onClick }: NavItemProps) {
+export function NavItem({ icon, label, to, isCollapsed = false, onClick }: NavItemProps) {
+  const location = useLocation();
+  const active = location.pathname === to || (to !== "/" && location.pathname.startsWith(to));
+
   return (
-    <button
+    <Link
+      to={to}
       onClick={onClick}
       className={`w-full flex items-center ${isCollapsed ? 'justify-center' : 'gap-3'} px-3 py-2 rounded-lg transition-colors group`}
       title={isCollapsed ? label : undefined}
@@ -27,7 +32,7 @@ export function NavItem({ icon, label, active = false, isCollapsed = false, onCl
           {label}
         </span>
       )}
-    </button>
+    </Link>
   );
 }
 

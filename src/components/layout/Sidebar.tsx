@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import {
   DashboardIcon,
   SessionIcon,
@@ -19,6 +20,16 @@ interface SidebarProps {
 }
 
 export function Sidebar({ isCollapsed = false, onToggle, isMobileMenuOpen = false, onMobileMenuClose }: SidebarProps) {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // TODO: Add logout logic (clear tokens, etc.)
+    navigate("/login");
+    if (onMobileMenuClose) {
+      onMobileMenuClose();
+    }
+  };
+
   return (
     <>
       {/* Mobile Sidebar */}
@@ -42,43 +53,50 @@ export function Sidebar({ isCollapsed = false, onToggle, isMobileMenuOpen = fals
           <NavItem 
             icon={<DashboardIcon className="w-5 h-5" />} 
             label="Dashboard" 
-            active 
+            to="/"
+            isCollapsed={false}
+            onClick={onMobileMenuClose}
+          />
+           <NavItem 
+            icon={<GamesIcon className="w-5 h-5" />} 
+            label="Cognitive Games" 
+            to="/games"
             isCollapsed={false}
             onClick={onMobileMenuClose}
           />
           <NavItem 
             icon={<SessionIcon className="w-5 h-5" />} 
             label="My Session" 
+            to="/sessions"
             isCollapsed={false}
             onClick={onMobileMenuClose}
           />
           <NavItem 
             icon={<PsychologistsIcon className="w-5 h-5" />} 
             label="Psychologists" 
+            to="/psychologists"
             isCollapsed={false}
             onClick={onMobileMenuClose}
           />
           <NavItem 
             icon={<CalendarIcon className="w-5 h-5" />} 
             label="Calendar" 
+            to="/calendar"
             isCollapsed={false}
             onClick={onMobileMenuClose}
           />
           <NavItem 
             icon={<JournalIcon className="w-5 h-5" />} 
             label="Journal" 
+            to="/journal"
             isCollapsed={false}
             onClick={onMobileMenuClose}
           />
-          <NavItem 
-            icon={<GamesIcon className="w-5 h-5" />} 
-            label="Cognitive Games" 
-            isCollapsed={false}
-            onClick={onMobileMenuClose}
-          />
+         
           <NavItem 
             icon={<ChatIcon className="w-5 h-5" />} 
             label="Chat" 
+            to="/chat"
             isCollapsed={false}
             onClick={onMobileMenuClose}
           />
@@ -88,7 +106,7 @@ export function Sidebar({ isCollapsed = false, onToggle, isMobileMenuOpen = fals
         <div className="p-3">
           <button 
             className="flex items-center gap-3 w-full px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
-            onClick={onMobileMenuClose}
+            onClick={handleLogout}
           >
             <LogoutIcon className="w-5 h-5" />
             <span>Log Out</span>
@@ -118,44 +136,53 @@ export function Sidebar({ isCollapsed = false, onToggle, isMobileMenuOpen = fals
         <NavItem 
           icon={<DashboardIcon className="w-5 h-5" />} 
           label="Dashboard" 
-          active 
+          to="/"
           isCollapsed={isCollapsed}
         />
         <NavItem 
           icon={<SessionIcon className="w-5 h-5" />} 
           label="My Session" 
+          to="/sessions"
           isCollapsed={isCollapsed}
         />
         <NavItem 
           icon={<PsychologistsIcon className="w-5 h-5" />} 
           label="Psychologists" 
+          to="/psychologists"
           isCollapsed={isCollapsed}
         />
         <NavItem 
           icon={<CalendarIcon className="w-5 h-5" />} 
           label="Calendar" 
+          to="/calendar"
           isCollapsed={isCollapsed}
         />
         <NavItem 
           icon={<JournalIcon className="w-5 h-5" />} 
           label="Journal" 
+          to="/journal"
           isCollapsed={isCollapsed}
         />
         <NavItem 
           icon={<GamesIcon className="w-5 h-5" />} 
           label="Cognitive Games" 
+          to="/games"
           isCollapsed={isCollapsed}
         />
         <NavItem 
           icon={<ChatIcon className="w-5 h-5" />} 
           label="Chat" 
+          to="/chat"
           isCollapsed={isCollapsed}
         />
       </nav>
 
       {/* Log Out */}
       <div className="p-3">
-        <button className={`flex items-center ${isCollapsed ? 'justify-center' : 'gap-3'} w-full px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors`}>
+        <button 
+          onClick={handleLogout}
+          className={`flex items-center ${isCollapsed ? 'justify-center' : 'gap-3'} w-full px-3 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors`}
+        >
           <LogoutIcon className="w-5 h-5" />
           {!isCollapsed && <span>Log Out</span>}
         </button>

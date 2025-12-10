@@ -27,14 +27,6 @@ export function StreakTracker({ streaks }: StreakTrackerProps) {
           <span className="text-sm font-semibold text-purple-600">{streaks.support} days</span>
         </div>
       </div>
-      {streaks.protectionActive && (
-        <div className="mt-3 pt-3 border-t border-gray-200">
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-green-600 font-medium">🛡️ Protection Active</span>
-            <span className="text-xs text-gray-500">Gradual reduction enabled</span>
-          </div>
-        </div>
-      )}
     </Card>
   );
 }
