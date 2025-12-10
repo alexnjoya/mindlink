@@ -72,16 +72,16 @@ export function Sidebar({ isCollapsed = false, onToggle, isMobileMenuOpen = fals
             onClick={onMobileMenuClose}
           />
           <NavItem 
-            icon={<SessionIcon className="w-5 h-5" />} 
-            label="My Session" 
-            to="/sessions"
+            icon={<PsychologistsIcon className="w-5 h-5" />} 
+            label="Support Network" 
+            to="/psychologists"
             isCollapsed={false}
             onClick={onMobileMenuClose}
           />
           <NavItem 
-            icon={<PsychologistsIcon className="w-5 h-5" />} 
-            label="Support Network" 
-            to="/psychologists"
+            icon={<SessionIcon className="w-5 h-5" />} 
+            label="My Session" 
+            to="/sessions"
             isCollapsed={false}
             onClick={onMobileMenuClose}
           />
@@ -151,15 +151,15 @@ export function Sidebar({ isCollapsed = false, onToggle, isMobileMenuOpen = fals
           isCollapsed={isCollapsed}
         />
         <NavItem 
-          icon={<SessionIcon className="w-5 h-5" />} 
-          label="My Session" 
-          to="/sessions"
-          isCollapsed={isCollapsed}
-        />
-        <NavItem 
           icon={<PsychologistsIcon className="w-5 h-5" />} 
           label="Support Network" 
           to="/psychologists"
+          isCollapsed={isCollapsed}
+        />
+        <NavItem 
+          icon={<SessionIcon className="w-5 h-5" />} 
+          label="My Session" 
+          to="/sessions"
           isCollapsed={isCollapsed}
         />
         <NavItem 

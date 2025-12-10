@@ -40,3 +40,11 @@ export interface CommunityPost {
   timeAgo: string;
 }
 
+export type MoodType = "happy" | "stressed" | "lonely" | "anxious" | "tired";
+
+export interface MoodEntry {
+  date: string;
+  mood: MoodType;
+  timestamp: string;
+}
+

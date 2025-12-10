@@ -13,22 +13,31 @@ export function Header({ userName, onMobileMenuToggle }: HeaderProps) {
   const isDashboard = location.pathname === "/";
   const { greeting, icon } = getTimeBasedGreeting();
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const desktopDropdownRef = useRef<HTMLDivElement>(null);
+  const mobileDropdownRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+      const isInsideDesktop = desktopDropdownRef.current?.contains(target);
+      const isInsideMobile = mobileDropdownRef.current?.contains(target);
+      
+      // Close if click is outside both dropdowns
+      if (!isInsideDesktop && !isInsideMobile) {
         setIsProfileDropdownOpen(false);
       }
     };
 
     if (isProfileDropdownOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
+      // Use a small delay to allow click events on dropdown items to fire first
+      setTimeout(() => {
+        document.addEventListener("click", handleClickOutside, true);
+      }, 0);
     }
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("click", handleClickOutside, true);
     };
   }, [isProfileDropdownOpen]);
 
@@ -60,9 +69,12 @@ export function Header({ userName, onMobileMenuToggle }: HeaderProps) {
             <BellIcon className="w-6 h-6 text-gray-700" />
             <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
           </div>
-          <div className="relative" ref={dropdownRef}>
+          <div className="relative" ref={desktopDropdownRef}>
             <button
-              onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsProfileDropdownOpen(!isProfileDropdownOpen);
+              }}
               className="hover:opacity-80 transition-opacity"
               aria-label="Profile menu"
             >
@@ -71,28 +83,42 @@ export function Header({ userName, onMobileMenuToggle }: HeaderProps) {
               </div>
             </button>
             {isProfileDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+              <div 
+                className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-[100]"
+                onClick={(e) => e.stopPropagation()}
+                onMouseDown={(e) => e.stopPropagation()}
+              >
                 <Link
                   to="/profile"
-                  onClick={() => setIsProfileDropdownOpen(false)}
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsProfileDropdownOpen(false);
+                  }}
+                  onMouseDown={(e) => e.stopPropagation()}
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
                 >
                   Profile
                 </Link>
                 <Link
                   to="/settings"
-                  onClick={() => setIsProfileDropdownOpen(false)}
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsProfileDropdownOpen(false);
+                  }}
+                  onMouseDown={(e) => e.stopPropagation()}
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
                 >
                   Settings
                 </Link>
                 <div className="border-t border-gray-200 my-1"></div>
                 <button
-                  className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                  onClick={() => {
+                  className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
+                  onClick={(e) => {
+                    e.stopPropagation();
                     // Handle logout
                     setIsProfileDropdownOpen(false);
                   }}
+                  onMouseDown={(e) => e.stopPropagation()}
                 >
                   Log Out
                 </button>
@@ -124,9 +150,12 @@ export function Header({ userName, onMobileMenuToggle }: HeaderProps) {
               <BellIcon className="w-5 h-5 text-gray-700" />
               <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
             </div>
-            <div className="relative flex-shrink-0" ref={dropdownRef}>
+            <div className="relative flex-shrink-0" ref={mobileDropdownRef}>
               <button
-                onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsProfileDropdownOpen(!isProfileDropdownOpen);
+                }}
                 className="hover:opacity-80 transition-opacity"
                 aria-label="Profile menu"
               >
@@ -135,28 +164,42 @@ export function Header({ userName, onMobileMenuToggle }: HeaderProps) {
                 </div>
               </button>
               {isProfileDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                <div 
+                  className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-[100]"
+                  onClick={(e) => e.stopPropagation()}
+                  onMouseDown={(e) => e.stopPropagation()}
+                >
                   <Link
                     to="/profile"
-                    onClick={() => setIsProfileDropdownOpen(false)}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsProfileDropdownOpen(false);
+                    }}
+                    onMouseDown={(e) => e.stopPropagation()}
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
                   >
                     Profile
                   </Link>
                   <Link
                     to="/settings"
-                    onClick={() => setIsProfileDropdownOpen(false)}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsProfileDropdownOpen(false);
+                    }}
+                    onMouseDown={(e) => e.stopPropagation()}
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
                   >
                     Settings
                   </Link>
                   <div className="border-t border-gray-200 my-1"></div>
                   <button
-                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                    onClick={() => {
+                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
                       // Handle logout
                       setIsProfileDropdownOpen(false);
                     }}
+                    onMouseDown={(e) => e.stopPropagation()}
                   >
                     Log Out
                   </button>
