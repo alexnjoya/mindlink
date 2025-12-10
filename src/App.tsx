@@ -10,6 +10,8 @@ import { CognitiveGames as CognitiveGamesPage } from "./pages/CognitiveGames";
 import { Chat } from "./pages/Chat";
 import { Login } from "./pages/Login";
 import { Signup } from "./pages/Signup";
+import { Profile } from "./pages/Profile";
+import { Settings } from "./pages/Settings";
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
         <Route path="/journal" element={<DashboardLayout><Journal /></DashboardLayout>} />
         <Route path="/games" element={<DashboardLayout><CognitiveGamesPage /></DashboardLayout>} />
         <Route path="/chat" element={<DashboardLayout><Chat /></DashboardLayout>} />
+        <Route path="/profile" element={<DashboardLayout><Profile /></DashboardLayout>} />
+        <Route path="/settings" element={<DashboardLayout><Settings /></DashboardLayout>} />
       </Routes>
     </BrowserRouter>
   );

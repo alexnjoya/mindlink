@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { BellIcon, SearchIcon, MenuIcon } from "../icons";
 import { getTimeBasedGreeting } from "../../utils/greeting";
 
@@ -35,7 +35,7 @@ export function Header({ userName, onMobileMenuToggle }: HeaderProps) {
   return (
     <div className="px-4 sm:px-6 py-3 sm:py-4">
       {/* Desktop Layout */}
-      <div className="hidden sm:flex items-center justify-between gap-4">
+      <div className={`hidden sm:flex items-center gap-4 ${isDashboard ? 'justify-between' : 'justify-end'}`}>
         {/* Desktop: Greeting on left - only on dashboard */}
         {isDashboard && (
           <div className="flex items-center gap-3">
@@ -72,18 +72,20 @@ export function Header({ userName, onMobileMenuToggle }: HeaderProps) {
             </button>
             {isProfileDropdownOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-                <a
-                  href="/profile"
+                <Link
+                  to="/profile"
+                  onClick={() => setIsProfileDropdownOpen(false)}
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                 >
                   Profile
-                </a>
-                <a
-                  href="/settings"
+                </Link>
+                <Link
+                  to="/settings"
+                  onClick={() => setIsProfileDropdownOpen(false)}
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                 >
                   Settings
-                </a>
+                </Link>
                 <div className="border-t border-gray-200 my-1"></div>
                 <button
                   className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
@@ -134,18 +136,20 @@ export function Header({ userName, onMobileMenuToggle }: HeaderProps) {
               </button>
               {isProfileDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-                  <a
-                    href="/profile"
+                  <Link
+                    to="/profile"
+                    onClick={() => setIsProfileDropdownOpen(false)}
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                   >
                     Profile
-                  </a>
-                  <a
-                    href="/settings"
+                  </Link>
+                  <Link
+                    to="/settings"
+                    onClick={() => setIsProfileDropdownOpen(false)}
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                   >
                     Settings
-                  </a>
+                  </Link>
                   <div className="border-t border-gray-200 my-1"></div>
                   <button
                     className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
