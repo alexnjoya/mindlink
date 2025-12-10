@@ -38,7 +38,7 @@ export function RecommendationCard({
         </div>
       )}
       <div className="p-4">
-        <span className="inline-block px-2 py-1 bg-green-100 text-green-600 rounded-full text-xs font-medium mb-2">
+        <span className="inline-block text-gray-600 text-xs font-medium mb-2">
           {category}
         </span>
         <h4 className="text-lg font-semibold text-gray-900 mb-2">{title}</h4>

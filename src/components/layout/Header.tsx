@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { BellIcon, SearchIcon, MenuIcon, ChevronDownIcon } from "../icons";
+import { BellIcon, SearchIcon, MenuIcon } from "../icons";
 import { getTimeBasedGreeting } from "../../utils/greeting";
 
 interface HeaderProps {
@@ -58,14 +58,39 @@ export function Header({ userName, onMobileMenuToggle }: HeaderProps) {
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-              className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+              className="hover:opacity-80 transition-opacity"
               aria-label="Profile menu"
             >
               <div className="w-10 h-10 bg-purple-200 rounded-full flex items-center justify-center">
                 <span className="text-purple-600 font-semibold">M</span>
               </div>
-              <ChevronDownIcon className={`w-4 h-4 text-gray-600 transition-transform ${isProfileDropdownOpen ? 'rotate-180' : ''}`} />
             </button>
+            {isProfileDropdownOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                <a
+                  href="/profile"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  Profile
+                </a>
+                <a
+                  href="/settings"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  Settings
+                </a>
+                <div className="border-t border-gray-200 my-1"></div>
+                <button
+                  className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                  onClick={() => {
+                    // Handle logout
+                    setIsProfileDropdownOpen(false);
+                  }}
+                >
+                  Log Out
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -95,14 +120,39 @@ export function Header({ userName, onMobileMenuToggle }: HeaderProps) {
             <div className="relative flex-shrink-0" ref={dropdownRef}>
               <button
                 onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-                className="flex items-center gap-1.5 hover:opacity-80 transition-opacity"
+                className="hover:opacity-80 transition-opacity"
                 aria-label="Profile menu"
               >
                 <div className="w-8 h-8 bg-purple-200 rounded-full flex items-center justify-center">
                   <span className="text-purple-600 font-semibold text-sm">M</span>
                 </div>
-                <ChevronDownIcon className={`w-3.5 h-3.5 text-gray-600 transition-transform ${isProfileDropdownOpen ? 'rotate-180' : ''}`} />
               </button>
+              {isProfileDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                  <a
+                    href="/profile"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                  >
+                    Profile
+                  </a>
+                  <a
+                    href="/settings"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                  >
+                    Settings
+                  </a>
+                  <div className="border-t border-gray-200 my-1"></div>
+                  <button
+                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                    onClick={() => {
+                      // Handle logout
+                      setIsProfileDropdownOpen(false);
+                    }}
+                  >
+                    Log Out
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
