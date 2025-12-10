@@ -1,4 +1,5 @@
-import { BellIcon, SearchIcon, MenuIcon } from "../icons";
+import { useState, useRef, useEffect } from "react";
+import { BellIcon, SearchIcon, MenuIcon, ChevronDownIcon } from "../icons";
 import { getTimeBasedGreeting } from "../../utils/greeting";
 
 interface HeaderProps {
@@ -8,6 +9,25 @@ interface HeaderProps {
 
 export function Header({ userName, onMobileMenuToggle }: HeaderProps) {
   const { greeting, icon } = getTimeBasedGreeting();
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsProfileDropdownOpen(false);
+      }
+    };
+
+    if (isProfileDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isProfileDropdownOpen]);
 
   return (
     <div className="px-4 sm:px-6 py-3 sm:py-4">
@@ -35,8 +55,17 @@ export function Header({ userName, onMobileMenuToggle }: HeaderProps) {
             <BellIcon className="w-6 h-6 text-gray-700" />
             <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
           </div>
-          <div className="w-10 h-10 bg-purple-200 rounded-full flex items-center justify-center">
-            <span className="text-purple-600 font-semibold">M</span>
+          <div className="relative" ref={dropdownRef}>
+            <button
+              onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+              className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+              aria-label="Profile menu"
+            >
+              <div className="w-10 h-10 bg-purple-200 rounded-full flex items-center justify-center">
+                <span className="text-purple-600 font-semibold">M</span>
+              </div>
+              <ChevronDownIcon className={`w-4 h-4 text-gray-600 transition-transform ${isProfileDropdownOpen ? 'rotate-180' : ''}`} />
+            </button>
           </div>
         </div>
       </div>
@@ -63,8 +92,17 @@ export function Header({ userName, onMobileMenuToggle }: HeaderProps) {
               <BellIcon className="w-5 h-5 text-gray-700" />
               <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
             </div>
-            <div className="w-8 h-8 bg-purple-200 rounded-full flex items-center justify-center flex-shrink-0">
-              <span className="text-purple-600 font-semibold text-sm">M</span>
+            <div className="relative flex-shrink-0" ref={dropdownRef}>
+              <button
+                onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+                className="flex items-center gap-1.5 hover:opacity-80 transition-opacity"
+                aria-label="Profile menu"
+              >
+                <div className="w-8 h-8 bg-purple-200 rounded-full flex items-center justify-center">
+                  <span className="text-purple-600 font-semibold text-sm">M</span>
+                </div>
+                <ChevronDownIcon className={`w-3.5 h-3.5 text-gray-600 transition-transform ${isProfileDropdownOpen ? 'rotate-180' : ''}`} />
+              </button>
             </div>
           </div>
         </div>

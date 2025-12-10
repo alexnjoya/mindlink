@@ -11,11 +11,16 @@ export function WellnessResources() {
       </div>
       <div className="bg-white rounded-xl overflow-hidden shadow-[0_1px_2px_0_rgba(0,0,0,0.05)]">
         <div className="relative">
-          <div className="w-full h-64 bg-gradient-to-br from-blue-300 via-purple-400 to-purple-500 flex items-center justify-center relative overflow-hidden">
-            {/* Video thumbnail background */}
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-400/80 to-purple-600/80"></div>
-            <div className="relative z-10 w-20 h-20 bg-white/90 rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors cursor-pointer">
-              <span className="text-3xl text-purple-600 ml-1">▶</span>
+          <div className="w-full h-64 relative overflow-hidden">
+            <img
+              src="/breath.jpg"
+              alt="Breathing exercise"
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-400/40 to-purple-600/40 flex items-center justify-center">
+              <div className="relative z-10 w-20 h-20 bg-white/90 rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors cursor-pointer">
+                <span className="text-3xl text-purple-600 ml-1">▶</span>
+              </div>
             </div>
           </div>
           <div className="p-4">
