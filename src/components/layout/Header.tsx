@@ -11,6 +11,7 @@ interface HeaderProps {
 export function Header({ userName, onMobileMenuToggle }: HeaderProps) {
   const location = useLocation();
   const isDashboard = location.pathname === "/";
+  const isChat = location.pathname === "/chat";
   const { greeting, icon } = getTimeBasedGreeting();
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const desktopDropdownRef = useRef<HTMLDivElement>(null);
@@ -57,18 +58,22 @@ export function Header({ userName, onMobileMenuToggle }: HeaderProps) {
 
         {/* Desktop: Search, Notification, and Profile */}
         <div className="flex items-center gap-4">
-          <div className="relative max-w-md w-full">
-            <input
-              type="text"
-              placeholder="Search anything..."
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white"
-            />
-            <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-          </div>
-          <div className="relative">
-            <BellIcon className="w-6 h-6 text-gray-700" />
-            <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
-          </div>
+          {!isChat && (
+            <>
+              <div className="relative max-w-md w-full">
+                <input
+                  type="text"
+                  placeholder="Search anything..."
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white"
+                />
+                <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              </div>
+              <div className="relative">
+                <BellIcon className="w-6 h-6 text-gray-700" />
+                <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+              </div>
+            </>
+          )}
           <div className="relative" ref={desktopDropdownRef}>
             <button
               onClick={(e) => {
@@ -140,16 +145,20 @@ export function Header({ userName, onMobileMenuToggle }: HeaderProps) {
             <MenuIcon className="w-6 h-6 text-gray-700" />
           </button>
           <div className="flex items-center gap-2">
-            <button
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors flex-shrink-0"
-              aria-label="Search"
-            >
-              <SearchIcon className="w-5 h-5 text-gray-700" />
-            </button>
-            <div className="relative flex-shrink-0">
-              <BellIcon className="w-5 h-5 text-gray-700" />
-              <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
-            </div>
+            {!isChat && (
+              <>
+                <button
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors flex-shrink-0"
+                  aria-label="Search"
+                >
+                  <SearchIcon className="w-5 h-5 text-gray-700" />
+                </button>
+                <div className="relative flex-shrink-0">
+                  <BellIcon className="w-5 h-5 text-gray-700" />
+                  <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+                </div>
+              </>
+            )}
             <div className="relative flex-shrink-0" ref={mobileDropdownRef}>
               <button
                 onClick={(e) => {

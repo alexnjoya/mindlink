@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import type { ReactNode } from "react";
 import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
@@ -10,6 +11,8 @@ interface DashboardLayoutProps {
 }
 
 export function DashboardLayout({ children, userName = "Marie" }: DashboardLayoutProps) {
+  const location = useLocation();
+  const isChat = location.pathname === "/chat";
   const [isCollapsed, setIsCollapsed] = useState(() => {
     const saved = localStorage.getItem('sidebarCollapsed');
     return saved ? JSON.parse(saved) : false;
@@ -52,12 +55,18 @@ export function DashboardLayout({ children, userName = "Marie" }: DashboardLayou
         onMobileMenuClose={() => setIsMobileMenuOpen(false)}
       />
       
-      <main className={`flex-1 overflow-y-auto bg-gray-50 transition-all duration-300 ${isCollapsed ? 'lg:ml-20' : 'lg:ml-64'} ml-0`}>
-        <Header 
-          userName={userName} 
-          onMobileMenuToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        />
-        <div className="p-4 sm:p-6 space-y-6">{children}</div>
+      <main className={`flex-1 overflow-y-auto bg-gray-100 transition-all duration-300 ${isCollapsed ? 'lg:ml-20' : 'lg:ml-64'} ml-0`}>
+        {!isChat && (
+          <Header 
+            userName={userName} 
+            onMobileMenuToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          />
+        )}
+        {isChat ? (
+          <div className="h-full">{children}</div>
+        ) : (
+          <div className="p-4 sm:p-6 space-y-6">{children}</div>
+        )}
         <AgentAIChat />
       </main>
     </div>
