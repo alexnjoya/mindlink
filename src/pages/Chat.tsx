@@ -189,22 +189,30 @@ export function Chat() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-transparent" style={{ height: "100vh" }}>
+    <div 
+      className="flex flex-col h-full bg-transparent" 
+      style={{ 
+        height: "100vh", 
+        minHeight: "-webkit-fill-available",
+        maxHeight: "100vh",
+        overflow: "hidden"
+      }}
+    >
       {/* Messages Container */}
       <div 
         ref={messagesContainerRef}
-        className="flex-1 overflow-y-auto px-3 sm:px-4"
-        style={{ scrollBehavior: "smooth" }}
+        className="flex-1 overflow-y-auto px-2 sm:px-4"
+        style={{ scrollBehavior: "smooth", WebkitOverflowScrolling: "touch" }}
       >
-        <div className="max-w-2xl mx-auto pt-4 sm:pt-6 pb-24 sm:pb-32 space-y-4 sm:space-y-6">
+        <div className="max-w-2xl mx-auto pt-3 sm:pt-6 pb-20 sm:pb-32 space-y-3 sm:space-y-6">
           {messages.map((message) => (
             <div
               key={message.id}
-              className={`flex gap-4 ${message.role === "user" ? "justify-end" : "justify-start"}`}
+              className={`flex gap-2 sm:gap-4 ${message.role === "user" ? "justify-end" : "justify-start"}`}
             >
-              <div className="max-w-[90%] sm:max-w-[85%]">
+              <div className="max-w-[95%] sm:max-w-[85%]">
                 <div
-                  className={`rounded-xl sm:rounded-2xl px-3 py-2 sm:px-4 sm:py-3 ${
+                  className={`rounded-2xl px-3.5 py-2.5 sm:px-4 sm:py-3 ${
                     message.role === "user"
                       ? "bg-gray-100 text-gray-900"
                       : "bg-transparent text-gray-900"
@@ -215,7 +223,7 @@ export function Chat() {
                       : "none"
                   }}
                 >
-                  <div className="whitespace-pre-wrap break-words leading-relaxed text-sm sm:text-[15px]">
+                  <div className="whitespace-pre-wrap break-words leading-relaxed text-[15px] sm:text-[15px]">
                     {message.content}
                   </div>
                 </div>
@@ -225,9 +233,9 @@ export function Chat() {
 
           {/* Loading indicator - three dots while thinking */}
           {isLoading && !streamingMessage && (
-            <div className="flex gap-4 justify-start">
-              <div className="max-w-[85%]">
-                <div className="rounded-2xl px-4 py-3 bg-transparent text-gray-900">
+            <div className="flex gap-2 sm:gap-4 justify-start">
+              <div className="max-w-[95%] sm:max-w-[85%]">
+                <div className="rounded-2xl px-3.5 py-2.5 sm:px-4 sm:py-3 bg-transparent text-gray-900">
                   <div className="flex items-center gap-2">
                     <div className="flex gap-1">
                       <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }}></div>
@@ -242,10 +250,10 @@ export function Chat() {
 
           {/* Streaming message */}
           {streamingMessage && (
-            <div className="flex gap-3 sm:gap-4 justify-start">
-              <div className="max-w-[90%] sm:max-w-[85%]">
-                <div className="rounded-xl sm:rounded-2xl px-3 py-2 sm:px-4 sm:py-3 bg-transparent text-gray-900">
-                  <div className="whitespace-pre-wrap break-words leading-relaxed text-sm sm:text-[15px]">
+            <div className="flex gap-2 sm:gap-4 justify-start">
+              <div className="max-w-[95%] sm:max-w-[85%]">
+                <div className="rounded-2xl px-3.5 py-2.5 sm:px-4 sm:py-3 bg-transparent text-gray-900">
+                  <div className="whitespace-pre-wrap break-words leading-relaxed text-[15px] sm:text-[15px]">
                     {streamingMessage}
                   </div>
                 </div>
@@ -256,14 +264,14 @@ export function Chat() {
 
           {/* Quick prompts (show only when no messages) */}
           {messages.length === 0 && !isLoading && (
-            <div className="space-y-3 pt-4">
+            <div className="space-y-3 pt-4 px-2">
               <p className="text-sm text-gray-500 text-center">Try asking:</p>
               <div className="flex flex-wrap gap-2 justify-center">
                 {quickPrompts.map((prompt, index) => (
                   <button
                     key={index}
                     onClick={() => handleQuickPrompt(prompt)}
-                    className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full text-sm transition-colors"
+                    className="px-3 py-2 sm:px-4 bg-gray-100 hover:bg-gray-200 active:bg-gray-300 text-gray-700 rounded-full text-xs sm:text-sm transition-colors touch-manipulation"
                   >
                     {prompt}
                   </button>
@@ -277,32 +285,32 @@ export function Chat() {
       </div>
 
       {/* Input Area - Fixed at bottom */}
-      <div className="border-t border-gray-200 bg-transparent backdrop-blur-sm">
-        <div className="max-w-2xl mx-auto px-3 sm:px-4 py-3 sm:py-4">
-          <div className="relative flex items-end gap-2 sm:gap-3 bg-white rounded-xl sm:rounded-2xl border border-gray-300 shadow-xl focus-within:border-purple-500 focus-within:shadow-2xl transition-all">
-            <div className="flex-1 relative min-h-[48px] sm:min-h-[52px] flex items-center">
+      <div className="border-t border-gray-200 bg-transparent backdrop-blur-sm safe-area-inset-bottom">
+        <div className="max-w-2xl mx-auto px-2 sm:px-4 py-2.5 sm:py-4">
+          <div className="relative flex items-end gap-2 sm:gap-3 bg-white rounded-2xl border border-gray-300 shadow-xl focus-within:border-purple-500 focus-within:shadow-2xl transition-all">
+            <div className="flex-1 relative min-h-[44px] sm:min-h-[52px] flex items-center">
               <textarea
                 ref={inputRef}
                 value={inputValue}
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
                 placeholder="Message AI..."
-                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 pr-10 sm:pr-12 bg-transparent border-0 focus:outline-none resize-none text-sm sm:text-[15px] text-gray-900 placeholder-gray-500"
+                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 pr-9 sm:pr-12 bg-transparent border-0 focus:outline-none resize-none text-[15px] sm:text-[15px] text-gray-900 placeholder-gray-500"
                 rows={1}
                 style={{
-                  minHeight: "48px",
+                  minHeight: "44px",
                   maxHeight: "200px",
                   lineHeight: "1.5",
                 }}
               />
             </div>
             <button
-              className="mb-1.5 sm:mb-2 p-1.5 sm:p-2 rounded-lg transition-colors flex-shrink-0 text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+              className="mb-1.5 sm:mb-2 p-2 rounded-lg transition-colors flex-shrink-0 text-gray-500 hover:text-gray-700 active:bg-gray-200 touch-manipulation"
               aria-label="Voice input"
-              style={{ minWidth: "28px", minHeight: "28px" }}
+              style={{ minWidth: "36px", minHeight: "36px" }}
             >
               <svg
-                className="w-4 h-4 sm:w-5 sm:h-5"
+                className="w-5 h-5 sm:w-5 sm:h-5"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -318,15 +326,15 @@ export function Chat() {
             <button
               onClick={handleSend}
               disabled={!inputValue.trim() || isLoading}
-              className={`mr-1.5 sm:mr-2 mb-1.5 sm:mb-2 p-1.5 sm:p-2 rounded-lg transition-colors flex-shrink-0 ${
+              className={`mr-1.5 sm:mr-2 mb-1.5 sm:mb-2 p-2 rounded-lg transition-colors flex-shrink-0 touch-manipulation ${
                 inputValue.trim() && !isLoading
-                  ? "bg-purple-600 text-white hover:bg-purple-700"
+                  ? "bg-purple-600 text-white hover:bg-purple-700 active:bg-purple-800"
                   : "bg-gray-200 text-gray-400 cursor-not-allowed"
               }`}
-              style={{ minWidth: "28px", minHeight: "28px" }}
+              style={{ minWidth: "36px", minHeight: "36px" }}
             >
               <svg
-                className="w-3.5 h-3.5 sm:w-4 sm:h-4"
+                className="w-4 h-4 sm:w-4 sm:h-4"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -340,7 +348,7 @@ export function Chat() {
               </svg>
             </button>
           </div>
-          <p className="text-[10px] sm:text-xs text-gray-500 mt-1.5 sm:mt-2 text-center">
+          <p className="text-[10px] sm:text-xs text-gray-500 mt-1.5 sm:mt-2 text-center px-2">
             AI can make mistakes. Check important info.
           </p>
         </div>

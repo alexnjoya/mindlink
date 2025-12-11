@@ -67,7 +67,7 @@ export function DashboardLayout({ children, userName = "Marie" }: DashboardLayou
         ) : (
           <div className="p-4 sm:p-6 space-y-6">{children}</div>
         )}
-        <AgentAIChat />
+        {!isChat && <AgentAIChat />}
       </main>
     </div>
   );
