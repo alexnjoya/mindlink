@@ -60,6 +60,7 @@ export function Chat() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const streamingTimeoutRef = useRef<number | null>(null);
+  const [isInputFocused, setIsInputFocused] = useState(false);
 
   // Load chat history from localStorage
   useEffect(() => {
@@ -176,6 +177,18 @@ export function Chat() {
     e.target.style.height = `${Math.min(e.target.scrollHeight, 200)}px`;
   };
 
+  const handleInputFocus = () => {
+    setIsInputFocused(true);
+    // Scroll to bottom when input is focused
+    setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 300);
+  };
+
+  const handleInputBlur = () => {
+    setIsInputFocused(false);
+  };
+
   const quickPrompts = [
     "I'm feeling anxious",
     "Help me manage stress",
@@ -190,18 +203,24 @@ export function Chat() {
 
   return (
     <div 
-      className="flex flex-col h-full bg-transparent w-full overflow-hidden" 
+      className="flex flex-col bg-transparent w-full overflow-hidden" 
       style={{ 
-        height: "100vh", 
+        height: isInputFocused ? "100%" : "100vh",
         minHeight: "-webkit-fill-available",
-        maxHeight: "100vh"
+        maxHeight: "100vh",
+        position: "relative"
       }}
     >
       {/* Messages Container */}
       <div 
         ref={messagesContainerRef}
         className="flex-1 overflow-y-auto overflow-x-hidden px-2 sm:px-4 w-full"
-        style={{ scrollBehavior: "smooth", WebkitOverflowScrolling: "touch" }}
+        style={{ 
+          scrollBehavior: "smooth", 
+          WebkitOverflowScrolling: "touch",
+          maxWidth: "100%",
+          boxSizing: "border-box"
+        }}
       >
         <div className="max-w-2xl mx-auto pt-3 sm:pt-6 pb-20 sm:pb-32 space-y-3 sm:space-y-6 w-full">
           {messages.map((message) => (
@@ -284,15 +303,17 @@ export function Chat() {
       </div>
 
       {/* Input Area - Fixed at bottom */}
-      <div className="border-t border-gray-200 bg-transparent backdrop-blur-sm safe-area-inset-bottom w-full overflow-hidden">
-        <div className="w-full sm:max-w-2xl mx-auto px-3 sm:px-4 py-2 sm:py-4">
-          <div className="relative flex items-end gap-1.5 sm:gap-3 bg-white rounded-xl sm:rounded-2xl border border-gray-300 shadow-xl focus-within:border-purple-500 focus-within:shadow-2xl transition-all w-full max-w-full">
-            <div className="flex-1 relative min-h-[36px] sm:min-h-[52px] flex items-center min-w-0">
+      <div className="border-t border-gray-200 bg-transparent backdrop-blur-sm safe-area-inset-bottom w-full overflow-hidden" style={{ flexShrink: 0 }}>
+        <div className="w-full sm:max-w-2xl mx-auto px-3 sm:px-4 py-2 sm:py-4" style={{ maxWidth: "100%", boxSizing: "border-box" }}>
+          <div className="relative flex items-end gap-1.5 sm:gap-3 bg-white rounded-xl sm:rounded-2xl border border-gray-300 shadow-xl focus-within:border-purple-500 focus-within:shadow-2xl transition-all w-full" style={{ maxWidth: "100%", boxSizing: "border-box" }}>
+            <div className="flex-1 relative min-h-[36px] sm:min-h-[52px] flex items-center min-w-0" style={{ maxWidth: "100%" }}>
               <textarea
                 ref={inputRef}
                 value={inputValue}
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
+                onFocus={handleInputFocus}
+                onBlur={handleInputBlur}
                 placeholder="Message AI..."
                 className="w-full px-2.5 sm:px-4 py-1.5 sm:py-3 pr-8 sm:pr-12 bg-transparent border-0 focus:outline-none resize-none text-sm sm:text-[15px] text-gray-900 placeholder-gray-500 overflow-wrap-anywhere"
                 rows={1}
@@ -301,7 +322,8 @@ export function Chat() {
                   maxHeight: "200px",
                   lineHeight: "1.5",
                   width: "100%",
-                  boxSizing: "border-box"
+                  boxSizing: "border-box",
+                  overflow: "hidden"
                 }}
               />
             </div>
