@@ -286,31 +286,31 @@ export function Chat() {
 
       {/* Input Area - Fixed at bottom */}
       <div className="border-t border-gray-200 bg-transparent backdrop-blur-sm safe-area-inset-bottom">
-        <div className="max-w-2xl mx-auto px-2 sm:px-4 py-2.5 sm:py-4">
-          <div className="relative flex items-end gap-2 sm:gap-3 bg-white rounded-2xl border border-gray-300 shadow-xl focus-within:border-purple-500 focus-within:shadow-2xl transition-all">
-            <div className="flex-1 relative min-h-[44px] sm:min-h-[52px] flex items-center">
+        <div className="w-full sm:max-w-2xl mx-auto px-3 sm:px-4 py-2 sm:py-4">
+          <div className="relative flex items-end gap-1.5 sm:gap-3 bg-white rounded-xl sm:rounded-2xl border border-gray-300 shadow-xl focus-within:border-purple-500 focus-within:shadow-2xl transition-all max-w-[calc(100%-1.5rem)] sm:max-w-full mx-auto">
+            <div className="flex-1 relative min-h-[36px] sm:min-h-[52px] flex items-center">
               <textarea
                 ref={inputRef}
                 value={inputValue}
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
                 placeholder="Message AI..."
-                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 pr-9 sm:pr-12 bg-transparent border-0 focus:outline-none resize-none text-[15px] sm:text-[15px] text-gray-900 placeholder-gray-500"
+                className="w-full px-2.5 sm:px-4 py-1.5 sm:py-3 pr-8 sm:pr-12 bg-transparent border-0 focus:outline-none resize-none text-sm sm:text-[15px] text-gray-900 placeholder-gray-500"
                 rows={1}
                 style={{
-                  minHeight: "44px",
+                  minHeight: "36px",
                   maxHeight: "200px",
                   lineHeight: "1.5",
                 }}
               />
             </div>
             <button
-              className="mb-1.5 sm:mb-2 p-2 rounded-lg transition-colors flex-shrink-0 text-gray-500 hover:text-gray-700 active:bg-gray-200 touch-manipulation"
+              className="mb-1 sm:mb-2 p-1.5 sm:p-2 rounded-lg transition-colors flex-shrink-0 text-gray-500 hover:text-gray-700 active:bg-gray-200 touch-manipulation"
               aria-label="Voice input"
-              style={{ minWidth: "36px", minHeight: "36px" }}
+              style={{ minWidth: "32px", minHeight: "32px" }}
             >
               <svg
-                className="w-5 h-5 sm:w-5 sm:h-5"
+                className="w-4 h-4 sm:w-5 sm:h-5"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -326,15 +326,15 @@ export function Chat() {
             <button
               onClick={handleSend}
               disabled={!inputValue.trim() || isLoading}
-              className={`mr-1.5 sm:mr-2 mb-1.5 sm:mb-2 p-2 rounded-lg transition-colors flex-shrink-0 touch-manipulation ${
+              className={`mr-1 sm:mr-2 mb-1 sm:mb-2 p-1.5 sm:p-2 rounded-lg transition-colors flex-shrink-0 touch-manipulation ${
                 inputValue.trim() && !isLoading
                   ? "bg-purple-600 text-white hover:bg-purple-700 active:bg-purple-800"
                   : "bg-gray-200 text-gray-400 cursor-not-allowed"
               }`}
-              style={{ minWidth: "36px", minHeight: "36px" }}
+              style={{ minWidth: "32px", minHeight: "32px" }}
             >
               <svg
-                className="w-4 h-4 sm:w-4 sm:h-4"
+                className="w-3.5 h-3.5 sm:w-4 sm:h-4"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -348,7 +348,7 @@ export function Chat() {
               </svg>
             </button>
           </div>
-          <p className="text-[10px] sm:text-xs text-gray-500 mt-1.5 sm:mt-2 text-center px-2">
+          <p className="text-[10px] sm:text-xs text-gray-500 mt-1 sm:mt-2 text-center px-2">
             AI can make mistakes. Check important info.
           </p>
         </div>
