@@ -102,7 +102,7 @@ export function Journal() {
     return groups;
   }, [filteredHistory]);
 
-  const handleMoodRecorded = (mood: MoodType) => {
+  const handleMoodRecorded = (_mood: MoodType) => {
     // Reload history after recording
     const stored = localStorage.getItem("moodHistory");
     if (stored) {

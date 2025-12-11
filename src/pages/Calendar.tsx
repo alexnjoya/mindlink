@@ -7,15 +7,6 @@ type ViewMode = "month" | "list";
 type SessionFilter = "all" | "upcoming" | "past" | "confirmed" | "pending" | "cancelled";
 
 // Helper functions
-const formatRole = (role: Session['professional']['role']): string => {
-  const roleMap = {
-    counselor: 'Counselor',
-    volunteer: 'Volunteer Listener',
-    nurse: 'Psychiatric Nurse',
-  };
-  return roleMap[role];
-};
-
 const getDaysInMonth = (date: Date) => {
   return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
 };

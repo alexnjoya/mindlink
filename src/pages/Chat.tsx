@@ -56,11 +56,10 @@ export function Chat() {
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [streamingMessage, setStreamingMessage] = useState<string>("");
-  const [streamingMessageId, setStreamingMessageId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
-  const streamingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const streamingTimeoutRef = useRef<number | null>(null);
 
   // Load chat history from localStorage
   useEffect(() => {
@@ -124,7 +123,6 @@ export function Chat() {
     try {
       const aiResponse = await generateAIResponse(userMessage.content);
       const messageId = (Date.now() + 1).toString();
-      setStreamingMessageId(messageId);
       setStreamingMessage("");
       setIsLoading(false);
       
@@ -147,7 +145,6 @@ export function Chat() {
           };
           setMessages(prev => [...prev, assistantMessage]);
           setStreamingMessage("");
-          setStreamingMessageId(null);
         }
       };
       
@@ -162,7 +159,6 @@ export function Chat() {
       setMessages(prev => [...prev, errorMessage]);
       setIsLoading(false);
       setStreamingMessage("");
-      setStreamingMessageId(null);
     }
   };
 

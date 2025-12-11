@@ -72,7 +72,6 @@ export function SchedulingModal({ isOpen, onClose, professional, onConfirm }: Sc
 
   const handleConfirm = () => {
     if (selectedDate && selectedTime) {
-      const [hours, minutes] = selectedTime.split(':').map(Number);
       const dateTime = new Date(`${selectedDate}T${selectedTime}:00`);
       
       // Generate Google Meet link
