@@ -190,27 +190,26 @@ export function Chat() {
 
   return (
     <div 
-      className="flex flex-col h-full bg-transparent" 
+      className="flex flex-col h-full bg-transparent w-full overflow-hidden" 
       style={{ 
         height: "100vh", 
         minHeight: "-webkit-fill-available",
-        maxHeight: "100vh",
-        overflow: "hidden"
+        maxHeight: "100vh"
       }}
     >
       {/* Messages Container */}
       <div 
         ref={messagesContainerRef}
-        className="flex-1 overflow-y-auto px-2 sm:px-4"
+        className="flex-1 overflow-y-auto overflow-x-hidden px-2 sm:px-4 w-full"
         style={{ scrollBehavior: "smooth", WebkitOverflowScrolling: "touch" }}
       >
-        <div className="max-w-2xl mx-auto pt-3 sm:pt-6 pb-20 sm:pb-32 space-y-3 sm:space-y-6">
+        <div className="max-w-2xl mx-auto pt-3 sm:pt-6 pb-20 sm:pb-32 space-y-3 sm:space-y-6 w-full">
           {messages.map((message) => (
             <div
               key={message.id}
-              className={`flex gap-2 sm:gap-4 ${message.role === "user" ? "justify-end" : "justify-start"}`}
+              className={`flex gap-2 sm:gap-4 w-full ${message.role === "user" ? "justify-end" : "justify-start"}`}
             >
-              <div className="max-w-[95%] sm:max-w-[85%]">
+              <div className="max-w-[85%] sm:max-w-[85%] min-w-0">
                 <div
                   className={`rounded-2xl px-3.5 py-2.5 sm:px-4 sm:py-3 ${
                     message.role === "user"
@@ -223,7 +222,7 @@ export function Chat() {
                       : "none"
                   }}
                 >
-                  <div className="whitespace-pre-wrap break-words leading-relaxed text-[15px] sm:text-[15px]">
+                  <div className="whitespace-pre-wrap break-words leading-relaxed text-[15px] sm:text-[15px] overflow-wrap-anywhere">
                     {message.content}
                   </div>
                 </div>
@@ -233,8 +232,8 @@ export function Chat() {
 
           {/* Loading indicator - three dots while thinking */}
           {isLoading && !streamingMessage && (
-            <div className="flex gap-2 sm:gap-4 justify-start">
-              <div className="max-w-[95%] sm:max-w-[85%]">
+            <div className="flex gap-2 sm:gap-4 justify-start w-full">
+              <div className="max-w-[85%] sm:max-w-[85%] min-w-0">
                 <div className="rounded-2xl px-3.5 py-2.5 sm:px-4 sm:py-3 bg-transparent text-gray-900">
                   <div className="flex items-center gap-2">
                     <div className="flex gap-1">
@@ -250,10 +249,10 @@ export function Chat() {
 
           {/* Streaming message */}
           {streamingMessage && (
-            <div className="flex gap-2 sm:gap-4 justify-start">
-              <div className="max-w-[95%] sm:max-w-[85%]">
+            <div className="flex gap-2 sm:gap-4 justify-start w-full">
+              <div className="max-w-[85%] sm:max-w-[85%] min-w-0">
                 <div className="rounded-2xl px-3.5 py-2.5 sm:px-4 sm:py-3 bg-transparent text-gray-900">
-                  <div className="whitespace-pre-wrap break-words leading-relaxed text-[15px] sm:text-[15px]">
+                  <div className="whitespace-pre-wrap break-words leading-relaxed text-[15px] sm:text-[15px] overflow-wrap-anywhere">
                     {streamingMessage}
                   </div>
                 </div>
@@ -285,22 +284,24 @@ export function Chat() {
       </div>
 
       {/* Input Area - Fixed at bottom */}
-      <div className="border-t border-gray-200 bg-transparent backdrop-blur-sm safe-area-inset-bottom">
+      <div className="border-t border-gray-200 bg-transparent backdrop-blur-sm safe-area-inset-bottom w-full overflow-hidden">
         <div className="w-full sm:max-w-2xl mx-auto px-3 sm:px-4 py-2 sm:py-4">
-          <div className="relative flex items-end gap-1.5 sm:gap-3 bg-white rounded-xl sm:rounded-2xl border border-gray-300 shadow-xl focus-within:border-purple-500 focus-within:shadow-2xl transition-all max-w-[calc(100%-1.5rem)] sm:max-w-full mx-auto">
-            <div className="flex-1 relative min-h-[36px] sm:min-h-[52px] flex items-center">
+          <div className="relative flex items-end gap-1.5 sm:gap-3 bg-white rounded-xl sm:rounded-2xl border border-gray-300 shadow-xl focus-within:border-purple-500 focus-within:shadow-2xl transition-all w-full max-w-full">
+            <div className="flex-1 relative min-h-[36px] sm:min-h-[52px] flex items-center min-w-0">
               <textarea
                 ref={inputRef}
                 value={inputValue}
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
                 placeholder="Message AI..."
-                className="w-full px-2.5 sm:px-4 py-1.5 sm:py-3 pr-8 sm:pr-12 bg-transparent border-0 focus:outline-none resize-none text-sm sm:text-[15px] text-gray-900 placeholder-gray-500"
+                className="w-full px-2.5 sm:px-4 py-1.5 sm:py-3 pr-8 sm:pr-12 bg-transparent border-0 focus:outline-none resize-none text-sm sm:text-[15px] text-gray-900 placeholder-gray-500 overflow-wrap-anywhere"
                 rows={1}
                 style={{
                   minHeight: "36px",
                   maxHeight: "200px",
                   lineHeight: "1.5",
+                  width: "100%",
+                  boxSizing: "border-box"
                 }}
               />
             </div>
