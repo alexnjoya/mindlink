@@ -2,7 +2,7 @@ import axios, { type InternalAxiosRequestConfig, AxiosError } from "axios";
 import { store } from "../redux/store"; // Import the Redux store
 
 const API = axios.create({
-    baseURL: import.meta.env.VITE_SERVER_API_URL!,
+    baseURL: import.meta.env.VITE_SERVER_API_URL || "https://final-year-project-9shd.onrender.com/api/v1",
 });
 
 // Request interceptor to add auth token dynamically
