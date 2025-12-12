@@ -9,7 +9,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { DashboardLayout } from "./components/layout/DashboardLayout";
 import { Dashboard } from "./components/dashboard/Dashboard";
 import { MySession } from "./pages/MySession";
-import { Psychologists } from "./pages/Psychologists";
+import { Psychologists } from "./pages/support";
 import { Calendar } from "./pages/Calendar";
 import { Journal } from "./pages/Journal";
 import { CognitiveGames as CognitiveGamesPage } from "./pages/CognitiveGames";

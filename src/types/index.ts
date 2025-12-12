@@ -48,3 +48,21 @@ export interface MoodEntry {
   timestamp: string;
 }
 
+export interface Professional {
+  id: string;
+  name: string;
+  role: 'counselor' | 'volunteer' | 'nurse';
+  avatar?: string;
+  bio?: string;
+  specialties?: string[];
+  languages?: string[];
+  availableSlots?: TimeSlot[];
+  rating?: number;
+  reviewCount?: number;
+}
+
+export interface TimeSlot {
+  date: string; // ISO date string
+  time: string; // HH:mm format
+  available: boolean;
+}
