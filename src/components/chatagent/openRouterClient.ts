@@ -9,9 +9,12 @@ if (!apiKey) {
 }
 
 // Initialize OpenRouter client
+// Note: dangerouslyAllowBrowser is required for browser usage with OpenRouter
+// In production, consider using a backend proxy to protect your API key
 const openai = new OpenAI({
   baseURL: 'https://openrouter.ai/api/v1',
   apiKey: apiKey || '',
+  dangerouslyAllowBrowser: true, // Required for browser usage with OpenRouter
   defaultHeaders: {
     'HTTP-Referer': import.meta.env.VITE_SITE_URL || window.location.origin,
     'X-Title': import.meta.env.VITE_SITE_NAME || 'MindLink',
