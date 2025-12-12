@@ -39,7 +39,7 @@ export const MainScreen: React.FC = () => {
   const currentQuestion = questions[currentIndex];
   const level = gameState?.level ?? 1;
 
-  const [_, setLevelStartTime] = useState(Date.now());
+  const [levelStartTime, setLevelStartTime] = useState(Date.now());
 
   useEffect(() => {
     if (!gameState) return;
@@ -68,6 +68,9 @@ export const MainScreen: React.FC = () => {
       const isUserCorrect = userSelectedAnswer === actualCorrect;
 
       const bonus = level % 10 === 0 ? 10 : 0;
+      
+      // Calculate response time
+      const responseTime = Date.now() - levelStartTime;
 
       if (isUserCorrect) {
         playSound("/sounds/correct1.wav")
@@ -75,7 +78,7 @@ export const MainScreen: React.FC = () => {
         playSound("/sounds/wrong3.wav")
       }
 
-      dispatch(recordAnswer({ correct: isUserCorrect, bonus }));
+      dispatch(recordAnswer({ correct: isUserCorrect, bonus, responseTime }));
       dispatch(advanceLevel());
 
       const delay = Math.max(300, 1000 - level * 30);
@@ -87,7 +90,7 @@ export const MainScreen: React.FC = () => {
         }
       }, delay);
     },
-    [currentQuestion, level, dispatch, currentIndex, questions.length]
+    [currentQuestion, level, dispatch, currentIndex, questions.length, levelStartTime]
   );
 
   useEffect(() => {

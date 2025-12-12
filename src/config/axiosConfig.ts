@@ -37,14 +37,30 @@ API.interceptors.response.use(
     (error: AxiosError) => {
         // Handle 401 Unauthorized or 403 Forbidden
         if (error.response?.status === 401 || error.response?.status === 403) {
-            // Clear invalid token
-            localStorage.removeItem("token");
-            store.dispatch(logout());
+            const url = error.config?.url || '';
             
-            // Only redirect if not already on login page
-            if (window.location.pathname !== '/login' && window.location.pathname !== '/signup') {
-                console.warn("Authentication failed. Redirecting to login...");
-                window.location.href = '/login';
+            // Skip auto-logout for game session endpoints (handle errors gracefully in game components)
+            const gameEndpoints = ['/game-session', '/research-session', '/game/'];
+            const isGameEndpoint = gameEndpoints.some(endpoint => url.includes(endpoint));
+            
+            // Skip auto-logout if it's a mock token (starts with 'mock-token-')
+            const token = store.getState().auth.token || localStorage.getItem("token");
+            const isMockToken = token?.startsWith('mock-token-');
+            
+            // Only log out and redirect for non-game endpoints and non-mock tokens
+            if (!isGameEndpoint && !isMockToken) {
+                // Clear invalid token
+                localStorage.removeItem("token");
+                store.dispatch(logout());
+                
+                // Only redirect if not already on login page
+                if (window.location.pathname !== '/login' && window.location.pathname !== '/signup') {
+                    console.warn("Authentication failed. Redirecting to login...");
+                    window.location.href = '/login';
+                }
+            } else {
+                // For game endpoints or mock tokens, just log the error without logging out
+                console.warn("API request failed (game endpoint or mock token):", url, error.response?.status);
             }
         }
         

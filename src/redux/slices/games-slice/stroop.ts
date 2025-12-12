@@ -64,18 +64,35 @@ const stroopGameSlice = createSlice({
       state.gameEnded = false;
     },
 
-    recordAnswer(state, action: PayloadAction<{ correct: boolean; bonus: number }>) {
-      const { correct, bonus } = action.payload;
+    recordAnswer(state, action: PayloadAction<{ correct: boolean; bonus: number; responseTime?: number }>) {
+      const { correct, bonus, responseTime } = action.payload;
       if (state.metrics && state.gameState) {
         state.metrics.attempts += 1;
         if (!correct) {
           state.metrics.errors += 1;
         }
         state.metrics.questions += 1;
-        state.metrics.averageResponseTime = ((state.config!.duration / state.metrics!.attempts)/1000)
-        state.metrics.accuracy = Math.round(
-          ((state.metrics.attempts - state.metrics.errors) / state.metrics.attempts) * 100
-        );
+        
+        // Calculate average response time properly
+        if (responseTime !== undefined && state.metrics.attempts > 0) {
+          // Update running average: (oldAverage * (n-1) + newValue) / n
+          const oldAverage = state.metrics.averageResponseTime || 0;
+          const n = state.metrics.attempts;
+          state.metrics.averageResponseTime = ((oldAverage * (n - 1)) + (responseTime / 1000)) / n;
+        } else if (state.metrics.attempts === 1) {
+          // First attempt, set initial response time
+          state.metrics.averageResponseTime = responseTime ? responseTime / 1000 : 0;
+        }
+        
+        // Calculate accuracy, prevent division by zero
+        if (state.metrics.attempts > 0) {
+          state.metrics.accuracy = Math.round(
+            ((state.metrics.attempts - state.metrics.errors) / state.metrics.attempts) * 100
+          );
+        } else {
+          state.metrics.accuracy = 0;
+        }
+        
         if (correct) {
           state.totalScore += 100 + bonus;
         }

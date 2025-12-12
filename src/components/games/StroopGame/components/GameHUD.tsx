@@ -36,7 +36,7 @@ export const GameHUD: React.FC<GameHUDProps> = ({
   };
 
 
-  if (!state?.config) return null;
+  if (!state?.config || !config) return null;
 
   const togglePause = () => {
     switch (gameTitle) {
@@ -46,16 +46,18 @@ export const GameHUD: React.FC<GameHUDProps> = ({
     }
   };
 
+  const gameDuration = config.duration || 20000; // Default to 20 seconds if not set
+
   return (
     <div className="w-full px-6 py-3 rounded-t-md bg-black/50 backdrop-blur-sm shadow-md text-[#EADEB8] flex justify-between items-center z-50">
       <div className="flex items-center space-x-6 text-base font-semibold">
-        <span>🎯 Score: <span className="font-bold">{totalScore}</span></span>
+        <span>🎯 Score: <span className="font-bold">{totalScore || 0}</span></span>
         {/* <span>🎯 Accuracy: <span className="font-bold">{accuracy}%</span></span> */}
       </div>
 
       <div className="flex items-center space-x-4">
         <CountdownTimer
-          duration={config!.duration}
+          duration={gameDuration}
           onComplete={handleGameEnd}
           isPaused={isPaused}
         />

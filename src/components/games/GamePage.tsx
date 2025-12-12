@@ -76,8 +76,52 @@ export const GamePage: React.FC = () => {
         );
 
         localStorage.removeItem("participantInfo"); // Immediatelyy remove participant info from local storage
-        } catch (error) {
+        } catch (error: any) {
         console.error("Failed to start game:", error);
+        
+        // If API fails (e.g., 403 with mock token), allow game to continue with a mock session ID
+        // This prevents the user from being logged out when using mock authentication
+        if (error.response?.status === 403 || error.response?.status === 401) {
+            console.warn("Game session API failed, continuing with mock session for development");
+            const mockSessionId = `mock-session-${Date.now()}`;
+            
+            // Use default config if API doesn't provide one
+            if (game === "guess-what") {
+                const defaultConfig = { levels: 3, imagesPerLevel: 4 };
+                dispatch(
+                    gameConfig.startGameAction({
+                    sessionId: mockSessionId,
+                    guessWhatConfig: defaultConfig,
+                    } as any)
+                );
+            } else if (game === "stroop") {
+                // Default Stroop config with questions
+                const defaultStroopConfig = {
+                    id: "stroop-default",
+                    type: "executive function" as const,
+                    title: "Stroop Test",
+                    duration: 20000, // 20 seconds for demo
+                    questions: [
+                        { text: "RED", fontColor: "red", isCorrect: true },
+                        { text: "BLUE", fontColor: "blue", isCorrect: true },
+                        { text: "GREEN", fontColor: "green", isCorrect: true },
+                        { text: "RED", fontColor: "blue", isCorrect: false },
+                        { text: "BLUE", fontColor: "red", isCorrect: false },
+                        { text: "GREEN", fontColor: "red", isCorrect: false },
+                        { text: "RED", fontColor: "red", isCorrect: true },
+                        { text: "BLUE", fontColor: "green", isCorrect: false },
+                        { text: "GREEN", fontColor: "green", isCorrect: true },
+                        { text: "RED", fontColor: "green", isCorrect: false },
+                    ]
+                };
+                dispatch(
+                    gameConfig.startGameAction({
+                    sessionId: mockSessionId,
+                    stroopGameConfig: defaultStroopConfig,
+                    } as any)
+                );
+            }
+        }
         }
     };
 

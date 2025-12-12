@@ -33,7 +33,7 @@ export const StroopMetricsTable: React.FC<StroopMetricsTableProps> = ({
             Predicted MMSE Score:
           </p>
           <p className="text-3xl text-green-600 font-bold">
-            {mmseScore.toFixed()}
+            {isNaN(mmseScore) ? 'N/A' : mmseScore.toFixed()}
             <span className="text-lg text-green-800"> / 30</span>
           </p>
         </div>
@@ -54,14 +54,16 @@ export const StroopMetricsTable: React.FC<StroopMetricsTableProps> = ({
           </thead>
           <tbody>
             <tr className="bg-white hover:bg-green-50 transition-colors">
-              <td className="p-3 font-medium">{metrics.questions}</td>
-              <td className="p-3 font-medium">{metrics.attempts}</td>
+              <td className="p-3 font-medium">{metrics.questions || 0}</td>
+              <td className="p-3 font-medium">{metrics.attempts || 0}</td>
               <td className="p-3 font-medium">
-                {metrics.averageResponseTime.toFixed(2)}
+                {isNaN(metrics.averageResponseTime) ? '0.00' : metrics.averageResponseTime.toFixed(2)}
               </td>
-              <td className="p-3 font-medium">{metrics.errors}</td>
-              <td className="p-3 font-medium">{metrics.accuracy.toFixed(1)}%</td>
-              <td className="p-3 font-semibold text-gray-800">{totalScore}</td>
+              <td className="p-3 font-medium">{metrics.errors || 0}</td>
+              <td className="p-3 font-medium">
+                {isNaN(metrics.accuracy) ? '0.0' : metrics.accuracy.toFixed(1)}%
+              </td>
+              <td className="p-3 font-semibold text-gray-800">{totalScore || 0}</td>
             </tr>
           </tbody>
         </table>
