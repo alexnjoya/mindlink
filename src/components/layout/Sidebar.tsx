@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import {
   DashboardIcon,
   SessionIcon,
@@ -11,6 +12,7 @@ import {
   ChevronLeftIcon,
 } from "../icons";
 import { NavItem } from "../shared/NavItem";
+import { logout } from "../../redux/slices/auth-slice/authSlice";
 
 interface SidebarProps {
   isCollapsed?: boolean;
@@ -21,10 +23,11 @@ interface SidebarProps {
 
 export function Sidebar({ isCollapsed = false, onToggle, isMobileMenuOpen = false, onMobileMenuClose }: SidebarProps) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleLogout = () => {
-    // TODO: Add logout logic (clear tokens, etc.)
-    navigate("/");
+    dispatch(logout());
+    navigate("/login");
     if (onMobileMenuClose) {
       onMobileMenuClose();
     }

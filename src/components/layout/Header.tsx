@@ -1,7 +1,9 @@
 import { useState, useRef, useEffect } from "react";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { BellIcon, SearchIcon, MenuIcon } from "../icons";
 import { getTimeBasedGreeting } from "../../utils/greeting";
+import { logout } from "../../redux/slices/auth-slice/authSlice";
 
 interface HeaderProps {
   userName: string;
@@ -10,12 +12,19 @@ interface HeaderProps {
 
 export function Header({ userName, onMobileMenuToggle }: HeaderProps) {
   const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const isDashboard = location.pathname === "/home";
   const isChat = location.pathname === "/chat";
   const { greeting, icon } = getTimeBasedGreeting();
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const desktopDropdownRef = useRef<HTMLDivElement>(null);
   const mobileDropdownRef = useRef<HTMLDivElement>(null);
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/login");
+  };
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -50,7 +59,7 @@ export function Header({ userName, onMobileMenuToggle }: HeaderProps) {
         {isDashboard && (
           <div className="flex items-center gap-3">
             <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
-              {greeting}, {userName}!
+              {greeting}
             </h2>
             {icon}
           </div>
@@ -120,7 +129,7 @@ export function Header({ userName, onMobileMenuToggle }: HeaderProps) {
                   className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
                   onClick={(e) => {
                     e.stopPropagation();
-                    // Handle logout
+                    handleLogout();
                     setIsProfileDropdownOpen(false);
                   }}
                   onMouseDown={(e) => e.stopPropagation()}
@@ -205,7 +214,7 @@ export function Header({ userName, onMobileMenuToggle }: HeaderProps) {
                     className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
                     onClick={(e) => {
                       e.stopPropagation();
-                      // Handle logout
+                      handleLogout();
                       setIsProfileDropdownOpen(false);
                     }}
                     onMouseDown={(e) => e.stopPropagation()}
@@ -221,7 +230,7 @@ export function Header({ userName, onMobileMenuToggle }: HeaderProps) {
         {isDashboard && (
           <div className="flex items-center gap-2">
             <h2 className="text-xl font-bold text-gray-900">
-              {greeting}, {userName}!
+              {greeting}
             </h2>
             {icon}
           </div>

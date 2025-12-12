@@ -2,10 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { loginSuccess } from "../redux/slices/auth-slice/authSlice";
 import toast from "react-hot-toast";
-import API from "../config/axiosConfig";
 import { useAppDispatch } from "../redux/store";
-
-const strongPasswordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
 
 export function Signup() {
   const navigate = useNavigate();
@@ -29,42 +26,39 @@ export function Signup() {
     e.preventDefault();
     setLoading(true);
 
-    if (!strongPasswordRegex.test(formData.password)) {
-      setFormErrors({
-        confirmPassword: "Password must be at least 6 characters long and include at least one letter, one number, and one special character.",
-      });
-      setLoading(false);
-      return;
-    }
-
     if (formData.password !== formData.confirmPassword) {
       setFormErrors({ confirmPassword: "Passwords do not match" });
       setLoading(false);
       return;
     }
 
-    try {
-      const response = await API.post('/auth/register', formData);
-      console.log(response);
+    // Bypass authentication - create mock user and token
+    const mockToken = 'mock-token-' + Date.now();
+    const mockUser = {
+      userId: '1',
+      username: formData.username || formData.email.split('@')[0] || 'User',
+      age: 25,
+      gender: 'other',
+      educationLevel: 'bachelor',
+      medicalCondition: false,
+      smokingStatus: false,
+      drinkingStatus: false,
+      email: formData.email,
+      role: 'user',
+    };
 
-      response!.status === 201 ? toast.success(response.data!.message) : toast.error(response.data!.message);
-      const token = response.data.token;
-      const user = response.data.user;
+    // Store token in local storage (for persistence)
+    localStorage.setItem('token', mockToken);
 
-      dispatch(loginSuccess({ token, user }))
-      setTimeout(() => {
-        navigate("/home")
-      }, 900)
+    // Dispatch Redux action
+    dispatch(loginSuccess({ token: mockToken, user: mockUser }));
+    toast.success('Account created successfully!');
 
-    } catch (error: any) {
-      if (error.response?.status === 409) {
-        toast.error("The email or username is already registered.");
-      } else {
-        toast.error("An error occurred. Try again later.");
-      }
-    } finally {
-      setLoading(false);
-    }
+    setTimeout(() => {
+      navigate("/home");
+    }, 500);
+
+    setLoading(false);
   };
 
   return (
@@ -172,7 +166,7 @@ export function Signup() {
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
               Already have an account?{" "}
-              <Link to="/" className="text-purple-600 font-medium hover:text-purple-700">
+              <Link to="/login" className="text-purple-600 font-medium hover:text-purple-700">
                 Sign in
               </Link>
             </p>

@@ -17,6 +17,8 @@ import { GamePage } from "./components/games/GamePage";
 import { Chat } from "./pages/Chat";
 import { Profile } from "./pages/Profile";
 import { Settings } from "./pages/Settings";
+import { Login } from "./pages/Login";
+import { Signup } from "./pages/Signup";
 
 
 
@@ -65,6 +67,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="/" element={<Navigate to="/home" replace />} />
         <Route path="/home" element={<DashboardLayout userName={user?.username || "User"}><Home /></DashboardLayout>} />
         <Route path="/sessions" element={<DashboardLayout><MySession /></DashboardLayout>} />

@@ -2,8 +2,7 @@ import { useState, type ChangeEvent, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast"
 import type { LoginFormData } from "../types/props";
-import { loginFailure, loginStart, loginSuccess } from "../redux/slices/auth-slice/authSlice";
-import API from "../config/axiosConfig";
+import { loginStart, loginSuccess } from "../redux/slices/auth-slice/authSlice";
 import { useAppDispatch, useAppSelector } from "../redux/store";
 
 export function Login() {
@@ -26,34 +25,31 @@ export function Login() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     dispatch(loginStart());
-    try {
-      console.log('Login attempt with data:', formData);
-      const response = await API.post('/auth/login', formData, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+    
+    // Bypass authentication - create mock user and token
+    const mockToken = 'mock-token-' + Date.now();
+    const mockUser = {
+      userId: '1',
+      username: formData.email.split('@')[0] || 'User',
+      age: 25,
+      gender: 'other',
+      educationLevel: 'bachelor',
+      medicalCondition: false,
+      smokingStatus: false,
+      drinkingStatus: false,
+      email: formData.email,
+      role: 'user',
+    };
 
-      if (response.status === 200) {
-        const { token, user, message } = response.data;
-        toast.success(message);
+    // Store token in local storage (for persistence)
+    localStorage.setItem('token', mockToken);
 
-        // Store token in local storage (for persistence)
-        localStorage.setItem('token', token);
+    // Dispatch Redux action
+    dispatch(loginSuccess({ token: mockToken, user: mockUser }));
+    toast.success('Login successful!');
 
-        // Dispatch Redux action
-        dispatch(loginSuccess({ token, user }));
-
-        setTimeout(() => navigate('/home'), 1000);
-        setFormData({ email: '', password: '' });
-      }
-    } catch (error: any) {
-      console.error('Login error:', error);
-      console.error('Error response:', error.response?.data);
-      const errorMessage = error.response?.data?.message || error.response?.data?.error || 'Login failed.';
-      dispatch(loginFailure(errorMessage));
-      toast.error(errorMessage);
-    }
+    setTimeout(() => navigate('/home'), 500);
+    setFormData({ email: '', password: '' });
   };
 
   return (

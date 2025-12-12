@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import type { ReactNode } from "react";
+import { useSelector } from "react-redux";
+import type { RootState } from "../../redux/store";
 import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
 import { AgentAIChat } from "../dashboard/AgentAIChat";
@@ -10,7 +12,10 @@ interface DashboardLayoutProps {
   userName?: string;
 }
 
-export function DashboardLayout({ children, userName = "Marie" }: DashboardLayoutProps) {
+export function DashboardLayout({ children, userName }: DashboardLayoutProps) {
+  const { user } = useSelector((state: RootState) => state.auth!);
+  // Use username from Redux user object, fallback to prop, then to default
+  const displayName = user?.username || userName || "User";
   const location = useLocation();
   const isChat = location.pathname === "/chat";
   const [isCollapsed, setIsCollapsed] = useState(() => {
@@ -58,7 +63,7 @@ export function DashboardLayout({ children, userName = "Marie" }: DashboardLayou
       <main className={`flex-1 overflow-y-auto bg-gray-100 transition-all duration-300 ${isCollapsed ? 'lg:ml-20' : 'lg:ml-64'} ml-0`}>
         {!isChat && (
           <Header
-            userName={userName}
+            userName={displayName}
             onMobileMenuToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           />
         )}

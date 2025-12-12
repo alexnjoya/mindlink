@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { generateAIResponse, type ChatMessage, MINDLINK_SYSTEM_PROMPT } from "../components/chatagent";
 
 interface Message {
   id: string;
@@ -6,50 +7,6 @@ interface Message {
   content: string;
   timestamp: Date;
 }
-
-// Mock AI responses - in production, this would call an API
-const generateAIResponse = async (userMessage: string): Promise<string> => {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
-  
-  const lowerMessage = userMessage.toLowerCase();
-  
-  // Simple keyword-based responses (in production, use actual AI API)
-  if (lowerMessage.includes("hello") || lowerMessage.includes("hi") || lowerMessage.includes("hey")) {
-    return "Hello! I'm here to support your mental wellbeing. How are you feeling today?";
-  }
-  
-  if (lowerMessage.includes("anxious") || lowerMessage.includes("anxiety") || lowerMessage.includes("worried")) {
-    return "I understand that anxiety can be overwhelming. Here are some techniques that might help:\n\n1. **Deep Breathing**: Try the 4-7-8 technique - breathe in for 4 counts, hold for 7, exhale for 8.\n2. **Grounding**: Name 5 things you can see, 4 you can touch, 3 you can hear, 2 you can smell, 1 you can taste.\n3. **Progressive Muscle Relaxation**: Tense and release each muscle group from toes to head.\n\nWould you like to explore any of these techniques further, or would you prefer to talk about what's causing your anxiety?";
-  }
-  
-  if (lowerMessage.includes("sad") || lowerMessage.includes("depressed") || lowerMessage.includes("down")) {
-    return "I'm sorry you're feeling this way. It's important to acknowledge your feelings. Here are some things that might help:\n\n1. **Self-Compassion**: Be kind to yourself. It's okay to not be okay.\n2. **Small Steps**: Even tiny actions like getting out of bed or taking a shower are victories.\n3. **Connection**: Consider reaching out to someone you trust or scheduling a session with a professional.\n4. **Routine**: Try to maintain a basic daily routine, even if it's minimal.\n\nRemember, you don't have to go through this alone. Would you like help finding support resources?";
-  }
-  
-  if (lowerMessage.includes("stress") || lowerMessage.includes("stressed")) {
-    return "Stress is a natural response, but when it becomes overwhelming, it's important to manage it. Here are some strategies:\n\n1. **Time Management**: Break tasks into smaller, manageable pieces.\n2. **Mindfulness**: Practice being present in the moment without judgment.\n3. **Physical Activity**: Even a short walk can help reduce stress.\n4. **Boundaries**: Learn to say no when you're feeling overwhelmed.\n\nWhat's causing you the most stress right now?";
-  }
-  
-  if (lowerMessage.includes("sleep") || lowerMessage.includes("insomnia") || lowerMessage.includes("tired")) {
-    return "Sleep is crucial for mental health. Here are some tips for better sleep:\n\n1. **Sleep Hygiene**: Keep a consistent sleep schedule, even on weekends.\n2. **Bedroom Environment**: Make your bedroom cool, dark, and quiet.\n3. **Pre-Sleep Routine**: Avoid screens an hour before bed, try reading or gentle stretching.\n4. **Limit Stimulants**: Avoid caffeine and heavy meals close to bedtime.\n\nAre you having trouble falling asleep, staying asleep, or both?";
-  }
-  
-  if (lowerMessage.includes("session") || lowerMessage.includes("appointment") || lowerMessage.includes("therapist")) {
-    return "I can help you with scheduling a session! You can:\n\n1. Visit the **Support Network** page to browse available counselors, volunteers, and nurses.\n2. Use the **Calendar** page to view and manage your appointments.\n3. Check **My Sessions** to see your upcoming and past sessions.\n\nWould you like me to guide you through scheduling a session, or do you have questions about what to expect?";
-  }
-  
-  if (lowerMessage.includes("mood") || lowerMessage.includes("feeling")) {
-    return "Tracking your mood is a great way to understand your emotional patterns. You can:\n\n1. Use the **Journal** page to record your daily moods and see trends over time.\n2. Check in with yourself regularly - how are you feeling right now?\n3. Notice patterns - are there certain times of day or situations that affect your mood?\n\nHow would you describe your current mood?";
-  }
-  
-  if (lowerMessage.includes("help") || lowerMessage.includes("support")) {
-    return "I'm here to help! MindLink offers several support options:\n\n1. **Professional Support**: Connect with counselors, volunteer listeners, or psychiatric nurses.\n2. **Community**: Join discussions and share experiences with others.\n3. **Resources**: Access breathing exercises, meditation guides, and wellness activities.\n4. **Cognitive Games**: Engage in activities designed to support mental wellbeing.\n\nWhat specific area would you like help with?";
-  }
-  
-  // Default response
-  return "Thank you for sharing. I'm here to support your mental wellbeing journey. I can help you with:\n\n• Managing anxiety and stress\n• Understanding your emotions\n• Finding support resources\n• Scheduling sessions\n• Wellness techniques and exercises\n\nWhat would you like to explore today?";
-};
 
 export function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -122,7 +79,24 @@ export function Chat() {
 
     // Generate AI response with typewriter effect
     try {
-      const aiResponse = await generateAIResponse(userMessage.content);
+      // Convert messages to format expected by OpenRouter API
+      // Include system message for context and conversation history
+      const conversationMessages: ChatMessage[] = [
+        {
+          role: "system",
+          content: MINDLINK_SYSTEM_PROMPT,
+        },
+        ...messages.map(msg => ({
+          role: msg.role as "user" | "assistant",
+          content: msg.content,
+        })),
+        {
+          role: "user",
+          content: userMessage.content,
+        },
+      ];
+
+      const aiResponse = await generateAIResponse(conversationMessages);
       const messageId = (Date.now() + 1).toString();
       setStreamingMessage("");
       setIsLoading(false);
@@ -151,10 +125,27 @@ export function Chat() {
       
       typeNextChar();
     } catch (error) {
+      console.error("Chat error:", error);
+      
+      let errorContent = "I apologize, but I'm having trouble processing your request right now. Please try again in a moment.";
+      
+      if (error instanceof Error) {
+        // Provide specific error messages based on error type
+        if (error.message.includes('API key') || error.message.includes('missing')) {
+          errorContent = "⚠️ API configuration error: Please ensure VITE_OPENROUTER_API_KEY is set in your .env file. The chat feature requires a valid OpenRouter API key to work.";
+        } else if (error.message.includes('Rate limit')) {
+          errorContent = "I'm receiving too many requests right now. Please wait a moment and try again.";
+        } else if (error.message.includes('Network') || error.message.includes('connection')) {
+          errorContent = "I'm having trouble connecting to the server. Please check your internet connection and try again.";
+        } else {
+          errorContent = `I apologize, but I encountered an error: ${error.message}. Please try again.`;
+        }
+      }
+      
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: "assistant",
-        content: "I apologize, but I'm having trouble processing your request right now. Please try again in a moment.",
+        content: errorContent,
         timestamp: new Date(),
       };
       setMessages(prev => [...prev, errorMessage]);
@@ -304,9 +295,9 @@ export function Chat() {
 
       {/* Input Area - Fixed at bottom */}
       <div className="border-t border-gray-200 bg-transparent backdrop-blur-sm safe-area-inset-bottom w-full overflow-hidden" style={{ flexShrink: 0 }}>
-        <div className="w-full sm:max-w-2xl mx-auto px-3 sm:px-4 py-2 sm:py-4" style={{ maxWidth: "100%", boxSizing: "border-box" }}>
-          <div className="relative flex items-end gap-1.5 sm:gap-3 bg-white rounded-xl sm:rounded-2xl border border-gray-300 shadow-xl focus-within:border-purple-500 focus-within:shadow-2xl transition-all w-full" style={{ maxWidth: "100%", boxSizing: "border-box" }}>
-            <div className="flex-1 relative min-h-[36px] sm:min-h-[52px] flex items-center min-w-0" style={{ maxWidth: "100%" }}>
+        <div className="w-full mx-auto px-3 sm:px-4 py-2 sm:py-3" style={{ maxWidth: "640px", boxSizing: "border-box" }}>
+          <div className="relative flex items-end gap-1.5 sm:gap-2 bg-white rounded-2xl sm:rounded-2xl border border-gray-300 shadow-sm focus-within:border-gray-400 focus-within:shadow-md transition-all w-full" style={{ maxWidth: "100%", boxSizing: "border-box" }}>
+            <div className="flex-1 relative min-h-[44px] flex items-center min-w-0" style={{ maxWidth: "100%" }}>
               <textarea
                 ref={inputRef}
                 value={inputValue}
@@ -315,10 +306,10 @@ export function Chat() {
                 onFocus={handleInputFocus}
                 onBlur={handleInputBlur}
                 placeholder="Message AI..."
-                className="w-full px-2.5 sm:px-4 py-1.5 sm:py-3 pr-8 sm:pr-12 bg-transparent border-0 focus:outline-none resize-none text-sm sm:text-[15px] text-gray-900 placeholder-gray-500 overflow-wrap-anywhere"
+                className="w-full px-3 sm:px-4 py-2.5 pr-10 sm:pr-12 bg-transparent border-0 focus:outline-none resize-none text-sm text-gray-900 placeholder-gray-500 overflow-wrap-anywhere"
                 rows={1}
                 style={{
-                  minHeight: "36px",
+                  minHeight: "44px",
                   maxHeight: "200px",
                   lineHeight: "1.5",
                   width: "100%",
@@ -328,12 +319,12 @@ export function Chat() {
               />
             </div>
             <button
-              className="mb-1 sm:mb-2 p-1.5 sm:p-2 rounded-lg transition-colors flex-shrink-0 text-gray-500 hover:text-gray-700 active:bg-gray-200 touch-manipulation"
+              className="mb-1.5 p-1.5 rounded-lg transition-colors flex-shrink-0 text-gray-500 hover:text-gray-700 active:bg-gray-200 touch-manipulation"
               aria-label="Voice input"
-              style={{ minWidth: "32px", minHeight: "32px" }}
+              style={{ minWidth: "28px", minHeight: "28px" }}
             >
               <svg
-                className="w-4 h-4 sm:w-5 sm:h-5"
+                className="w-4 h-4"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -349,15 +340,15 @@ export function Chat() {
             <button
               onClick={handleSend}
               disabled={!inputValue.trim() || isLoading}
-              className={`mr-1 sm:mr-2 mb-1 sm:mb-2 p-1.5 sm:p-2 rounded-lg transition-colors flex-shrink-0 touch-manipulation ${
+              className={`mr-1.5 mb-1.5 p-1.5 rounded-lg transition-colors flex-shrink-0 touch-manipulation ${
                 inputValue.trim() && !isLoading
                   ? "bg-purple-600 text-white hover:bg-purple-700 active:bg-purple-800"
                   : "bg-gray-200 text-gray-400 cursor-not-allowed"
               }`}
-              style={{ minWidth: "32px", minHeight: "32px" }}
+              style={{ minWidth: "28px", minHeight: "28px" }}
             >
               <svg
-                className="w-3.5 h-3.5 sm:w-4 sm:h-4"
+                className="w-4 h-4"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -371,7 +362,7 @@ export function Chat() {
               </svg>
             </button>
           </div>
-          <p className="text-[10px] sm:text-xs text-gray-500 mt-1 sm:mt-2 text-center px-2">
+          <p className="text-[10px] sm:text-xs text-gray-500 mt-1.5 text-center px-2">
             AI can make mistakes. Check important info.
           </p>
         </div>
