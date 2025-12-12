@@ -26,7 +26,7 @@ export function Signup() {
     }
     console.log("Signup:", formData);
     // Navigate to dashboard after successful signup
-    navigate("/");
+    navigate("/dashboard");
   };
 
   return (
@@ -132,7 +132,7 @@ export function Signup() {
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
               Already have an account?{" "}
-              <Link to="/login" className="text-purple-600 font-medium hover:text-purple-700">
+              <Link to="/" className="text-purple-600 font-medium hover:text-purple-700">
                 Sign in
               </Link>
             </p>
@@ -142,4 +142,3 @@ export function Signup() {
     </div>
   );
 }
-

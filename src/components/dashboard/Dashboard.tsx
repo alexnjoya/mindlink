@@ -5,6 +5,7 @@ import { CommunityPreview } from "./CommunityPreview";
 import { UpcomingSessions } from "./UpcomingSessions";
 import { Recommendations } from "./Recommendations";
 import type { Session, Recommendation, CommunityPost, StreakData } from "../../types";
+import { useEffect } from "react";
 
 // Mock data - in real app, this would come from API/context
 const mockStreaks: StreakData = {
@@ -139,8 +140,13 @@ const mockCommunityPosts: CommunityPost[] = [
 ];
 
 export function Dashboard() {
+  
   const userName = "Marie"; // This would come from user context/API
   const weeklySummary = "You logged 4 emotions this week - mostly calm and focused.";
+  
+  useEffect(() => {
+    
+  }, [])
 
   return (
     <>
