@@ -59,7 +59,7 @@ export function Header({ userName, onMobileMenuToggle }: HeaderProps) {
         {isDashboard && (
           <div className="flex items-center gap-3">
             <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
-              {greeting}
+              {greeting}{userName ? `, ${userName}` : ''}!
             </h2>
             {icon}
           </div>
@@ -230,7 +230,7 @@ export function Header({ userName, onMobileMenuToggle }: HeaderProps) {
         {isDashboard && (
           <div className="flex items-center gap-2">
             <h2 className="text-xl font-bold text-gray-900">
-              {greeting}
+              {greeting}{userName ? `, ${userName}` : ''}!
             </h2>
             {icon}
           </div>

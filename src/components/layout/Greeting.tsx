@@ -12,7 +12,7 @@ export function Greeting({ userName }: GreetingProps) {
     <div className="flex items-center justify-between mb-4">
       <div className="flex items-center gap-3">
         <h2 className="text-3xl font-bold text-gray-900">
-          {greeting}
+          {greeting}{userName ? `, ${userName}` : ''}!
         </h2>
         {icon}
       </div>
