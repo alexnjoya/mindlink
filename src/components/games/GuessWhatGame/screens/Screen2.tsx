@@ -8,23 +8,23 @@ interface Screen2Props {
   cards: Card[]
 }
 
-const Screen2: React.FC<Screen2Props> = ({currentImagesToFind, cards}) => {
+const Screen2: React.FC<Screen2Props> = ({ currentImagesToFind, cards }) => {
   return (
     <div className="flex flex-col justify-center items-center m-0 p-2">
       <div className="flex h-[6rem] justify-center items-center space-x-3 mt-2">
-          {currentImagesToFind.map((image, index) => (
-            <UnclickableCard key={index} image={image} />
-          ))}
+        {currentImagesToFind.map((image, index) => (
+          <UnclickableCard key={index} image={image} />
+        ))}
       </div>
 
       <p className="flex justify-center items-center mt-4 text-lg text-center font-semibold">
-          Select the cards that match the images above
+        Select the cards that match the images above
       </p>
 
       <div className="grid grid-cols-3 grid-rows-3 p-2 gap-5 mt-2 max-w-md">
-          {cards.map((card, index) => (
-            <ClickableCard index={index} key={card.id} id={card.id} image={card.image} matched={card.matched} />
-          ))}
+        {cards.map((card, index) => (
+          <ClickableCard index={index} key={card.id} id={card.id} image={card.image} matched={card.matched} />
+        ))}
       </div>
     </div>
   )

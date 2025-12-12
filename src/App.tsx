@@ -7,7 +7,7 @@ import { setGames, setStats } from "./redux/slices/content-slice/contentSlice";
 import { computeStats } from "./utils/game/dashboardUtils";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { DashboardLayout } from "./components/layout/DashboardLayout";
-import { Dashboard } from "./components/dashboard/Dashboard";
+import { Home } from "./components/dashboard/Home";
 import { MySession } from "./pages/MySession";
 import { Psychologists } from "./pages/support";
 import { Calendar } from "./pages/Calendar";
@@ -64,9 +64,9 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route index path="/" element={<Login />} />
+        <Route path="/" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/dashboard" element={<DashboardLayout><Dashboard /></DashboardLayout>} />
+        <Route path="/home" element={<DashboardLayout userName={user?.username!}><Home /></DashboardLayout>} />
         <Route path="/sessions" element={<DashboardLayout><MySession /></DashboardLayout>} />
         <Route path="/psychologists" element={<DashboardLayout><Psychologists /></DashboardLayout>} />
         <Route path="/calendar" element={<DashboardLayout><Calendar /></DashboardLayout>} />

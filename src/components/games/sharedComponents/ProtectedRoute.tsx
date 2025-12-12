@@ -1,5 +1,5 @@
 import { Navigate, useLocation } from "react-router-dom";
-import { ProtectedRouteProps } from "../types/props";
+import { type ProtectedRouteProps } from "../../../types/props";
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     const location = useLocation();

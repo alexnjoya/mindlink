@@ -5,7 +5,7 @@ export interface FormProps {
 }
 
 export interface LoginFormData {
-    username: string;
+    email: string;
     password: string;
 }
 
