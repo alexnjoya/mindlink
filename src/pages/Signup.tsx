@@ -1,32 +1,70 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { loginSuccess } from "../redux/slices/auth-slice/authSlice";
+import toast from "react-hot-toast";
+import API from "../config/axiosConfig";
+import { useAppDispatch } from "../redux/store";
+
+const strongPasswordRegex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
 
 export function Signup() {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [formData, setFormData] = useState({
-    name: "",
+    username: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
-  const navigate = useNavigate();
+  const [formErrors, setFormErrors] = useState<{ confirmPassword?: string }>({});
+  const [loading, setLoading] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement actual signup logic
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match");
+    setLoading(true);
+
+    if (!strongPasswordRegex.test(formData.password)) {
+      setFormErrors({
+        confirmPassword: "Password must be at least 6 characters long and include at least one letter, one number, and one special character.",
+      });
+      setLoading(false);
       return;
     }
-    console.log("Signup:", formData);
-    // Navigate to dashboard after successful signup
-    navigate("/dashboard");
+
+    if (formData.password !== formData.confirmPassword) {
+      setFormErrors({ confirmPassword: "Passwords do not match" });
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await API.post('/auth/register', formData);
+      console.log(response);
+
+      response!.status === 201 ? toast.success(response.data!.message) : toast.error(response.data!.message);
+      const token = response.data.token;
+      const user = response.data.user;
+
+      dispatch(loginSuccess({ token, user }))
+      setTimeout(() => {
+        navigate("/home")
+      }, 900)
+
+    } catch (error: any) {
+      if (error.response?.status === 409) {
+        toast.error("The email or username is already registered.");
+      } else {
+        toast.error("An error occurred. Try again later.");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -40,17 +78,17 @@ export function Signup() {
 
         {/* Signup Form */}
         <div className="bg-white rounded-xl shadow-[0_1px_2px_0_rgba(0,0,0,0.05)] p-8">
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleRegister} className="space-y-6">
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
                 Full Name
               </label>
               <input
-                id="name"
-                name="name"
+                id="username"
+                name="username"
                 type="text"
-                value={formData.name}
-                onChange={handleChange}
+                value={formData.username}
+                onChange={handleInputChange}
                 required
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 placeholder="Enter your full name"
@@ -66,7 +104,7 @@ export function Signup() {
                 name="email"
                 type="email"
                 value={formData.email}
-                onChange={handleChange}
+                onChange={handleInputChange}
                 required
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 placeholder="Enter your email"
@@ -82,7 +120,7 @@ export function Signup() {
                 name="password"
                 type="password"
                 value={formData.password}
-                onChange={handleChange}
+                onChange={handleInputChange}
                 required
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 placeholder="Create a password"
@@ -98,7 +136,7 @@ export function Signup() {
                 name="confirmPassword"
                 type="password"
                 value={formData.confirmPassword}
-                onChange={handleChange}
+                onChange={handleInputChange}
                 required
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 placeholder="Confirm your password"
@@ -121,11 +159,13 @@ export function Signup() {
               </label>
             </div>
 
+            {formErrors.confirmPassword && <p className="text-red-500 text-sm">{formErrors.confirmPassword}</p>}
             <button
               type="submit"
-              className="w-full bg-purple-600 text-white py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors"
+              disabled={loading}
+              className={`w-full py-2 rounded-lg ${loading ? "bg-purple-400" : "bg-purple-600 hover:bg-purple-500"} text-white`}
             >
-              Create Account
+              {loading ? "Signing Up..." : "Sign Up"}
             </button>
           </form>
 

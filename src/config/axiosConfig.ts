@@ -2,7 +2,7 @@ import axios, { type InternalAxiosRequestConfig, AxiosError } from "axios";
 import { store } from "../redux/store"; // Import the Redux store
 
 const API = axios.create({
-    baseURL: import.meta.env.VITE_SERVER_API_URL || "http://localhost:3000/api/v1",
+    baseURL: import.meta.env.VITE_SERVER_API_URL!,
 });
 
 // Request interceptor to add auth token dynamically

@@ -57,7 +57,7 @@ const mockRecommendations: Recommendation[] = [
     image: "/game.jpg",
     category: "Cognitive Game",
     description: "Challenge your attention skills",
-    actionUrl: "/games/memory",
+    actionUrl: "/games",
   },
   {
     id: "2",
@@ -84,7 +84,7 @@ const mockRecommendations: Recommendation[] = [
     image: "/build-focus.jpg",
     category: "Cognitive Game",
     description: "Improve your concentration with timed puzzles",
-    actionUrl: "/games/focus",
+    actionUrl: "/games",
   },
   {
     id: "5",
@@ -120,7 +120,7 @@ const mockRecommendations: Recommendation[] = [
     image: "/build-focus.jpg",
     category: "Cognitive Game",
     description: "Test and improve your pattern recognition",
-    actionUrl: "/games/pattern",
+    actionUrl: "/games",
   },
 ];
 
