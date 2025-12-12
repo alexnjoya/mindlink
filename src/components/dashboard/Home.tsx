@@ -6,8 +6,8 @@ import { UpcomingSessions } from "./UpcomingSessions";
 import { Recommendations } from "./Recommendations";
 import type { Session, Recommendation, CommunityPost, StreakData } from "../../types";
 import { useEffect } from "react";
-import { useAppSelector, type RootState } from "../../redux/store";
-import { useDispatch, useSelector } from "react-redux";
+import { type RootState } from "../../redux/store";
+import { useSelector } from "react-redux";
 
 // Mock data - in real app, this would come from API/context
 const mockStreaks: StreakData = {
@@ -155,7 +155,7 @@ export function Home() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <StreakTracker streaks={mockStreaks} />
         <div className="md:col-span-2">
-          <MoodCheckIn userName={user?.username!} weeklySummary={weeklySummary} />
+          <MoodCheckIn userName={user?.username || "User"} weeklySummary={weeklySummary} />
         </div>
       </div>
 

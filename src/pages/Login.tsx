@@ -27,7 +27,12 @@ export function Login() {
     e.preventDefault();
     dispatch(loginStart());
     try {
-      const response = await API.post('/auth/login', formData);
+      console.log('Login attempt with data:', formData);
+      const response = await API.post('/auth/login', formData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
       if (response.status === 200) {
         const { token, user, message } = response.data;
@@ -43,8 +48,11 @@ export function Login() {
         setFormData({ email: '', password: '' });
       }
     } catch (error: any) {
-      dispatch(loginFailure(error.response?.data?.message || 'Login failed.'));
-      toast.error(error.response?.data?.message || 'An error occurred.');
+      console.error('Login error:', error);
+      console.error('Error response:', error.response?.data);
+      const errorMessage = error.response?.data?.message || error.response?.data?.error || 'Login failed.';
+      dispatch(loginFailure(errorMessage));
+      toast.error(errorMessage);
     }
   };
 
@@ -67,7 +75,7 @@ export function Login() {
               <input
                 id="email"
                 name="email"
-                type="text"
+                type="email"
                 value={formData.email}
                 onChange={handleInputChange}
                 required

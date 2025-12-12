@@ -59,7 +59,7 @@ export function Chat() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
-  const streamingTimeoutRef = useRef<number | null>(null);
+  const streamingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [isInputFocused, setIsInputFocused] = useState(false);
 
   // Load chat history from localStorage

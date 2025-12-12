@@ -15,7 +15,7 @@ const MemorizationPhaseTimer: React.FC<TimerProps> = ({
 }) => {
   const [timeLeft, setTimeLeft] = useState(initialTime);
   const endTimeRef = useRef<number | null>(null);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Reset timer when initialTime changes (e.g., on game restart)
   useEffect(() => {

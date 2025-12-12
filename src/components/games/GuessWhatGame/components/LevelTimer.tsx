@@ -14,7 +14,7 @@ const LevelTimer: React.FC<LevelTimerProps> = ({
   onReset,
 }) => {
   const [elapsed, setElapsed] = useState(0);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Reset when entering memorization phase
   useEffect(() => {

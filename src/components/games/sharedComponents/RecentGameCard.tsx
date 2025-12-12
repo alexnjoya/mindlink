@@ -1,5 +1,5 @@
 import React from "react";
-import { IGame } from "../pages/Dashboard/Games";
+import { type IGame } from "../../../types/game/base";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
