@@ -5,6 +5,9 @@ import { CommunityPreview } from "./CommunityPreview";
 import { UpcomingSessions } from "./UpcomingSessions";
 import { Recommendations } from "./Recommendations";
 import type { Session, Recommendation, CommunityPost, StreakData } from "../../types";
+import { useEffect } from "react";
+import { useAppSelector, type RootState } from "../../redux/store";
+import { useDispatch, useSelector } from "react-redux";
 
 // Mock data - in real app, this would come from API/context
 const mockStreaks: StreakData = {
@@ -54,7 +57,7 @@ const mockRecommendations: Recommendation[] = [
     image: "/game.jpg",
     category: "Cognitive Game",
     description: "Challenge your attention skills",
-    actionUrl: "/games/memory",
+    actionUrl: "/games",
   },
   {
     id: "2",
@@ -81,7 +84,7 @@ const mockRecommendations: Recommendation[] = [
     image: "/build-focus.jpg",
     category: "Cognitive Game",
     description: "Improve your concentration with timed puzzles",
-    actionUrl: "/games/focus",
+    actionUrl: "/games",
   },
   {
     id: "5",
@@ -117,7 +120,7 @@ const mockRecommendations: Recommendation[] = [
     image: "/build-focus.jpg",
     category: "Cognitive Game",
     description: "Test and improve your pattern recognition",
-    actionUrl: "/games/pattern",
+    actionUrl: "/games",
   },
 ];
 
@@ -138,9 +141,13 @@ const mockCommunityPosts: CommunityPost[] = [
   },
 ];
 
-export function Dashboard() {
-  const userName = "Marie"; // This would come from user context/API
+export function Home() {
+  const { user } = useSelector((state: RootState) => state.auth!);
   const weeklySummary = "You logged 4 emotions this week - mostly calm and focused.";
+
+  useEffect(() => {
+
+  }, [])
 
   return (
     <>
@@ -148,7 +155,7 @@ export function Dashboard() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <StreakTracker streaks={mockStreaks} />
         <div className="md:col-span-2">
-          <MoodCheckIn userName={userName} weeklySummary={weeklySummary} />
+          <MoodCheckIn userName={user?.username!} weeklySummary={weeklySummary} />
         </div>
       </div>
 

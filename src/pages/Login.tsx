@@ -1,17 +1,51 @@
-import { useState } from "react";
+import { useState, type ChangeEvent, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast"
+import type { LoginFormData } from "../types/props";
+import { loginFailure, loginStart, loginSuccess } from "../redux/slices/auth-slice/authSlice";
+import API from "../config/axiosConfig";
+import { useAppDispatch, useAppSelector } from "../redux/store";
 
 export function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { loading } = useAppSelector((state) => state.auth);
+  const [formData, setFormData] = useState<LoginFormData>({ email: '', password: '' });
+  // const [showPassword, setShowPassword] = useState<boolean>(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  // const togglePasswordVisibility = () => {
+  //   setShowPassword((prev) => !prev);
+  // };
+
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    // TODO: Implement actual login logic
-    console.log("Login:", { email, password });
-    // Navigate to dashboard after successful login
-    navigate("/");
+    dispatch(loginStart());
+    try {
+      const response = await API.post('/auth/login', formData);
+
+      if (response.status === 200) {
+        const { token, user, message } = response.data;
+        toast.success(message);
+
+        // Store token in local storage (for persistence)
+        localStorage.setItem('token', token);
+
+        // Dispatch Redux action
+        dispatch(loginSuccess({ token, user }));
+
+        setTimeout(() => navigate('/home'), 1000);
+        setFormData({ email: '', password: '' });
+      }
+    } catch (error: any) {
+      dispatch(loginFailure(error.response?.data?.message || 'Login failed.'));
+      toast.error(error.response?.data?.message || 'An error occurred.');
+    }
   };
 
   return (
@@ -28,13 +62,14 @@ export function Login() {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                Email Address
+                Email
               </label>
               <input
                 id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                name="email"
+                type="text"
+                value={formData.email}
+                onChange={handleInputChange}
                 required
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 placeholder="Enter your email"
@@ -45,15 +80,26 @@ export function Login() {
               <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
                 Password
               </label>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                placeholder="Enter your password"
-              />
+              <div>
+
+                <input
+                  id="password"
+                  name="password"
+                  type="password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  placeholder="Enter your password"
+                />
+                {/* 
+                <span
+                  className="absolute right-3 top-3 text-gray-400 cursor-pointer"
+                  onClick={togglePasswordVisibility}
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </span> */}
+              </div>
             </div>
 
             <div className="flex items-center justify-between">
@@ -68,9 +114,10 @@ export function Login() {
 
             <button
               type="submit"
-              className="w-full bg-purple-600 text-white py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors"
+              disabled={loading}
+              className="w-full bg-purple-700 hover:bg-purple-500 py-2 text-white rounded-lg transition-all duration-200"
             >
-              Sign In
+              {loading ? 'Please wait...' : 'Sign In'}
             </button>
           </form>
 

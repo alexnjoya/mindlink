@@ -42,23 +42,23 @@ export function DashboardLayout({ children, userName = "Marie" }: DashboardLayou
     <div className="flex h-screen bg-white">
       {/* Mobile Overlay */}
       {isMobileMenuOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
           onClick={() => setIsMobileMenuOpen(false)}
         />
       )}
 
-      <Sidebar 
-        isCollapsed={isCollapsed} 
+      <Sidebar
+        isCollapsed={isCollapsed}
         onToggle={toggleCollapse}
         isMobileMenuOpen={isMobileMenuOpen}
         onMobileMenuClose={() => setIsMobileMenuOpen(false)}
       />
-      
+
       <main className={`flex-1 overflow-y-auto bg-gray-100 transition-all duration-300 ${isCollapsed ? 'lg:ml-20' : 'lg:ml-64'} ml-0`}>
         {!isChat && (
-          <Header 
-            userName={userName} 
+          <Header
+            userName={userName}
             onMobileMenuToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           />
         )}

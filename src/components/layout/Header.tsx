@@ -10,7 +10,7 @@ interface HeaderProps {
 
 export function Header({ userName, onMobileMenuToggle }: HeaderProps) {
   const location = useLocation();
-  const isDashboard = location.pathname === "/";
+  const isDashboard = location.pathname === "/home";
   const isChat = location.pathname === "/chat";
   const { greeting, icon } = getTimeBasedGreeting();
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
